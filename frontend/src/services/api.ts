@@ -92,6 +92,47 @@ export const fetchFacilities = async (
   return res.data;
 };
 
+export interface FacilityClusterItem {
+  count: number;
+  latitude: number;
+  longitude: number;
+  facility?: {
+    id: number;
+    name: string;
+    type: string;
+    operator: string | null;
+  };
+}
+
+export interface FacilityClustersResponse {
+  total: number;
+  clusters: FacilityClusterItem[];
+}
+
+export interface FacilityClustersQuery {
+  min_lon: number;
+  min_lat: number;
+  max_lon: number;
+  max_lat: number;
+  zoom: number;
+  kind?: string;
+}
+
+export const fetchFacilityClusters = async (
+  query: FacilityClustersQuery
+): Promise<FacilityClustersResponse> => {
+  const params: Record<string, string | number> = {
+    min_lon: query.min_lon,
+    min_lat: query.min_lat,
+    max_lon: query.max_lon,
+    max_lat: query.max_lat,
+    zoom: query.zoom,
+  };
+  if (query.kind) params.kind = query.kind;
+  const res = await api.get('/facilities/clusters', { params });
+  return res.data;
+};
+
 export interface DataStatus {
   refreshed: boolean;
   source?: string;

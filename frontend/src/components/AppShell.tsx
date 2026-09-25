@@ -91,7 +91,7 @@ const StatusPill: React.FC = () => {
         style={{ backgroundColor: healthy ? '#2F7D4F' : '#B3372A' }}
         aria-hidden="true"
       />
-      {healthy ? 'API live' : 'API offline'}
+      {healthy ? 'API connected' : 'API offline'}
     </span>
   );
 };
@@ -169,7 +169,6 @@ export const AppShell: React.FC = () => {
         </nav>
 
         <div className="px-5 py-4 border-t border-hairline space-y-2">
-          <StatusPill />
           <p className="text-[11px] leading-relaxed text-faint">
             Snapshot{dateRange ? ` · ${dateRange}` : ''}. Proximity is context,
             not causation.

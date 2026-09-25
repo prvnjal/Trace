@@ -11,6 +11,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Literal
 import logging
+import math
 import os
 from contextlib import asynccontextmanager
 
@@ -300,6 +301,99 @@ def list_facilities(
             for f in rows
         ],
     }
+
+
+@app.get("/facilities/clusters")
+def facility_clusters(
+    db: Session = Depends(get_db),
+    min_lon: float = Query(...),
+    min_lat: float = Query(...),
+    max_lon: float = Query(...),
+    max_lat: float = Query(...),
+    zoom: int = Query(..., ge=0, le=22),
+    kind: str | None = Query(None, description="works | power_plant | industrial_site | petroleum_well"),
+) -> dict:
+    base_filters = [
+        Facility.longitude >= min_lon,
+        Facility.longitude <= max_lon,
+        Facility.latitude >= min_lat,
+        Facility.latitude <= max_lat,
+    ]
+    if kind:
+        base_filters.append(Facility.facility_type == kind)
+
+    total = db.query(func.count(Facility.id)).filter(*base_filters).scalar() or 0
+
+    if total == 0:
+        return {"total": 0, "clusters": []}
+
+    lat_center = max(-85.0, min(85.0, (min_lat + max_lat) / 2.0))
+    lat_rad = math.radians(lat_center)
+    meters_per_pixel = 156543.03 * math.cos(lat_rad) / (2.0 ** zoom)
+    cell_meters = 48.0 * meters_per_pixel
+
+    cell_deg_lat = max(0.00001, cell_meters / 111320.0)
+    cell_deg_lon = max(0.00001, cell_meters / (111320.0 * max(0.0001, math.cos(lat_rad))))
+
+    grid_lon = func.floor(Facility.longitude / cell_deg_lon)
+    grid_lat = func.floor(Facility.latitude / cell_deg_lat)
+
+    rows = (
+        db.query(
+            func.count(Facility.id).label("count"),
+            func.avg(Facility.latitude).label("avg_lat"),
+            func.avg(Facility.longitude).label("avg_lon"),
+            func.max(Facility.id).label("max_id"),
+        )
+        .filter(*base_filters)
+        .group_by(grid_lon, grid_lat)
+        .all()
+    )
+
+    single_ids = [r.max_id for r in rows if r.count == 1]
+    single_facs = (
+        {f.id: f for f in db.query(Facility).filter(Facility.id.in_(single_ids)).all()}
+        if single_ids
+        else {}
+    )
+
+    clusters = []
+    for r in rows:
+        count = r.count
+        if count == 1:
+            fac = single_facs.get(r.max_id)
+            if fac:
+                clusters.append(
+                    {
+                        "count": 1,
+                        "latitude": round(fac.latitude, 6),
+                        "longitude": round(fac.longitude, 6),
+                        "facility": {
+                            "id": fac.id,
+                            "name": fac.name,
+                            "type": fac.facility_type,
+                            "operator": fac.operator,
+                        },
+                    }
+                )
+            else:
+                clusters.append(
+                    {
+                        "count": 1,
+                        "latitude": round(float(r.avg_lat), 6),
+                        "longitude": round(float(r.avg_lon), 6),
+                    }
+                )
+        else:
+            clusters.append(
+                {
+                    "count": count,
+                    "latitude": round(float(r.avg_lat), 6),
+                    "longitude": round(float(r.avg_lon), 6),
+                }
+            )
+
+    return {"total": total, "clusters": clusters}
 
 
 # ---- Automatic FIRMS refresh ----

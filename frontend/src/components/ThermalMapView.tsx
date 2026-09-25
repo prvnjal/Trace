@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
-import Supercluster from 'supercluster';
-import { Factory, Layers, List } from 'lucide-react';
-import type { EventSummary, FacilitySummary } from '../types';
+import { Factory, Globe, Layers, List } from 'lucide-react';
+import type { EventSummary } from '../types';
 import type { RiskAssessment } from '../utils/risk';
-import { fetchFacilities } from '../services/api';
+import { fetchFacilityClusters, type FacilityClusterItem } from '../services/api';
 import { displayFacilityName } from '../utils/format';
 import { RiskBadge } from './RiskBadge';
 
@@ -17,8 +16,14 @@ const DARK_TILES =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
 const LIGHT_TILES =
   'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const SAT_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+const REF_TILES =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
 const ATTRIBUTION =
   '&copy; <a href="https://www.esri.com/">Esri</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const SAT_ATTRIBUTION =
+  '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community';
 
 /** Detection-count color steps. Low step adapts to the basemap. */
 const markerColor = (count: number, dark: boolean): string => {
@@ -54,7 +59,7 @@ const facilityIcon = (dark: boolean) =>
   L.divIcon({
     html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11"><rect x="6" y="6" width="12" height="12" rx="2" fill="${
       dark ? '#7FA08C' : '#1D4A38'
-    }" stroke="${dark ? '#0B0F0E' : '#FFFFFF'}" stroke-width="2"/></svg>`,
+    }" stroke="${dark ? '#FAFAF7' : '#FFFFFF'}" stroke-width="2"/></svg>`,
     className: 'facility-marker',
     iconSize: [11, 11],
     iconAnchor: [5.5, 5.5],
@@ -90,10 +95,10 @@ const FocusController: React.FC<{ code: string | null; events: EventSummary[] }>
   return null;
 };
 
-/** Loads facilities for the current viewport (only at zoom >= 7). */
+/** Loads facility clusters for the current viewport (only at zoom >= 7). */
 const FacilityLoader: React.FC<{
   enabled: boolean;
-  onLoad: (f: FacilitySummary[]) => void;
+  onLoad: (clusters: FacilityClusterItem[]) => void;
 }> = ({ enabled, onLoad }) => {
   const map = useMap();
   const timer = useRef<number | null>(null);
@@ -104,24 +109,23 @@ const FacilityLoader: React.FC<{
     }
     let cancelled = false;
     const load = async () => {
-      if (map.getZoom() < 7) {
+      const z = Math.round(map.getZoom());
+      if (z < 7) {
         if (!cancelled) onLoad([]);
         return;
       }
       const b = map.getBounds();
       try {
-        const res = await fetchFacilities({
-          bounds: {
-            min_lon: b.getWest(),
-            min_lat: b.getSouth(),
-            max_lon: b.getEast(),
-            max_lat: b.getNorth(),
-          },
-          limit: 2000,
+        const res = await fetchFacilityClusters({
+          min_lon: b.getWest(),
+          min_lat: b.getSouth(),
+          max_lon: b.getEast(),
+          max_lat: b.getNorth(),
+          zoom: z,
         });
-        if (!cancelled) onLoad(res.facilities || []);
+        if (!cancelled) onLoad(res.clusters || []);
       } catch {
-        /* keep previous facilities on error */
+        /* keep previous clusters on error */
       }
     };
     load();
@@ -139,94 +143,49 @@ const FacilityLoader: React.FC<{
   return null;
 };
 
-type FacilityPoint = {
-  type: 'Feature';
-  properties: { facility: FacilitySummary };
-  geometry: { type: 'Point'; coordinates: [number, number] };
-};
-
-/** Renders facilities as supercluster clusters / points for the viewport. */
-const FacilityClusters: React.FC<{ facilities: FacilitySummary[]; dark: boolean }> = ({
-  facilities,
+/** Renders server-computed facility clusters / single points for the viewport. */
+const FacilityClusters: React.FC<{ clusters: FacilityClusterItem[]; dark: boolean }> = ({
+  clusters,
   dark,
 }) => {
   const map = useMap();
-  const [zoom, setZoom] = useState(() => map.getZoom());
-  const [bbox, setBbox] = useState<[number, number, number, number]>(() => {
-    const b = map.getBounds();
-    return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-  });
-
-  useEffect(() => {
-    const sync = () => {
-      setZoom(map.getZoom());
-      const b = map.getBounds();
-      setBbox([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]);
-    };
-    map.on('moveend', sync);
-    return () => {
-      map.off('moveend', sync);
-    };
-  }, [map]);
-
-  const index = useMemo(() => {
-    const idx = new Supercluster<{ facility: FacilitySummary }, Record<string, never>>({
-      radius: 48,
-      maxZoom: 16,
-    });
-    idx.load(
-      facilities.map(
-        (f): FacilityPoint => ({
-          type: 'Feature',
-          properties: { facility: f },
-          geometry: { type: 'Point', coordinates: [f.longitude, f.latitude] },
-        })
-      )
-    );
-    return idx;
-  }, [facilities]);
-
-  const clusters = useMemo(
-    () => index.getClusters(bbox, Math.round(zoom)),
-    [index, bbox, zoom]
-  );
 
   return (
     <>
-      {clusters.map((c) => {
-        const [lng, lat] = c.geometry.coordinates;
-        if ('cluster' in c.properties && c.properties.cluster) {
-          const clusterId = (c.properties as { cluster_id: number }).cluster_id;
-          const count = (c.properties as { point_count: number }).point_count;
+      {clusters.map((c, i) => {
+        if (c.count > 1) {
           return (
             <Marker
-              key={`c-${clusterId}`}
-              position={[lat, lng]}
-              icon={clusterIcon(count)}
+              key={`c-${i}-${c.latitude}-${c.longitude}`}
+              position={[c.latitude, c.longitude]}
+              icon={clusterIcon(c.count)}
               eventHandlers={{
                 click: () => {
-                  const z = index.getClusterExpansionZoom(clusterId);
-                  if (reduceMotion) map.setView([lat, lng], z);
-                  else map.flyTo([lat, lng], z, { duration: 0.6 });
+                  const z = Math.min(map.getZoom() + 2, 19);
+                  const target: [number, number] = [c.latitude, c.longitude];
+                  if (reduceMotion) map.setView(target, z);
+                  else map.flyTo(target, z, { duration: 0.6 });
                 },
               }}
             />
           );
         }
-        const f = (c.properties as { facility: FacilitySummary }).facility;
+        const f = c.facility;
         return (
           <Marker
-            key={`f-${f.id}`}
-            position={[f.latitude, f.longitude]}
+            key={`f-${f?.id ?? i}-${c.latitude}-${c.longitude}`}
+            position={[c.latitude, c.longitude]}
             icon={facilityIcon(dark)}
           >
-            <Popup>
-              <div className="text-xs space-y-0.5">
-                <div className="font-semibold">{displayFacilityName(f.name, f.type)}</div>
-                <div className="opacity-70 capitalize">{f.type.replace(/_/g, ' ')}</div>
-                {f.operator && <div className="opacity-60">{f.operator}</div>}
-              </div>
-            </Popup>
+            {f && (
+              <Popup>
+                <div className="text-xs space-y-0.5">
+                  <div className="font-semibold">{displayFacilityName(f.name, f.type)}</div>
+                  <div className="opacity-70 capitalize">{f.type.replace(/_/g, ' ')}</div>
+                  {f.operator && <div className="opacity-60">{f.operator}</div>}
+                </div>
+              </Popup>
+            )}
           </Marker>
         );
       })}
@@ -244,7 +203,7 @@ const highlightIcon = (dark: boolean) =>
   L.divIcon({
     html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><rect x="4" y="4" width="16" height="16" rx="3" fill="${
       dark ? '#E8E4D8' : '#1D4A38'
-    }" stroke="${dark ? '#1D4A38' : '#FFFFFF'}" stroke-width="2.5"/></svg>`,
+    }" stroke="${dark ? '#FAFAF7' : '#FFFFFF'}" stroke-width="2.5"/></svg>`,
     className: 'facility-marker',
     iconSize: [16, 16],
     iconAnchor: [8, 8],
@@ -285,9 +244,12 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
   topLeftControls,
 }) => {
   const [facilitiesOn, setFacilitiesOn] = useState(false);
-  const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
+  const [facilityClusters, setFacilityClusters] = useState<FacilityClusterItem[]>([]);
+  const [satellite, setSatellite] = useState(false);
   const [legendOn, setLegendOn] = useState(showLegend);
   const [zoom, setZoom] = useState(5);
+
+  const isDarkBasemap = dark || satellite;
 
   useEffect(() => {
     if (selectedCode) {
@@ -299,7 +261,7 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
     <div className={`relative w-full h-full ${dark ? 'map-dark' : ''} ${className}`}>
       {interactive && (
         <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-1.5 items-start pointer-events-auto">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 flex-wrap">
             {enableFacilityLayer && (
               <button
                 type="button"
@@ -327,12 +289,34 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
               title="Toggle legend"
               className={`transition-quiet inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1.5 text-[11px] font-medium ${
                 dark
-                  ? 'border-[#2A332F] bg-[#111715]/90 text-[#9AA39C] hover:text-[#E8E4D8]'
-                  : 'border-hairline bg-surface text-muted hover:text-ink'
+                  ? legendOn
+                    ? 'border-[#3A443F] bg-[#1A201D] text-[#E8E4D8]'
+                    : 'border-[#2A332F] bg-[#111715]/90 text-[#9AA39C] hover:text-[#E8E4D8]'
+                  : legendOn
+                    ? 'border-pine bg-pine-soft text-pine-deep'
+                    : 'border-hairline bg-surface text-muted hover:text-ink'
               }`}
             >
               <List className="w-3.5 h-3.5" aria-hidden="true" />
               Legend
+            </button>
+            <button
+              type="button"
+              onClick={() => setSatellite((v) => !v)}
+              aria-pressed={satellite}
+              title="Toggle satellite imagery"
+              className={`transition-quiet inline-flex items-center gap-1.5 rounded-sm border px-2.5 py-1.5 text-[11px] font-medium ${
+                dark
+                  ? satellite
+                    ? 'border-[#3A443F] bg-[#1A201D] text-[#E8E4D8]'
+                    : 'border-[#2A332F] bg-[#111715]/90 text-[#9AA39C] hover:text-[#E8E4D8]'
+                  : satellite
+                    ? 'border-pine bg-pine-soft text-pine-deep'
+                    : 'border-hairline bg-surface text-muted hover:text-ink'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" aria-hidden="true" />
+              Satellite
             </button>
           </div>
           {topLeftControls}
@@ -356,7 +340,7 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
                 <li key={s.label} className="flex items-center gap-2 text-xs">
                   <span
                     className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: markerColor(s.min, dark) }}
+                    style={{ backgroundColor: markerColor(s.min, isDarkBasemap) }}
                     aria-hidden="true"
                   />
                   {s.label}
@@ -367,7 +351,7 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
           <div className="flex items-center gap-2 text-xs">
             <span
               className="w-2.5 h-2.5 shrink-0 rounded-[2px]"
-              style={{ backgroundColor: dark ? '#7FA08C' : '#1D4A38' }}
+              style={{ backgroundColor: isDarkBasemap ? '#7FA08C' : '#1D4A38' }}
               aria-hidden="true"
             />
             Industrial facility
@@ -400,20 +384,26 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
       >
         {interactive && <ZoomControl position="bottomright" />}
         <TileLayer
-          attribution={ATTRIBUTION}
-          url={dark ? DARK_TILES : LIGHT_TILES}
+          attribution={satellite ? SAT_ATTRIBUTION : ATTRIBUTION}
+          url={satellite ? SAT_TILES : (dark ? DARK_TILES : LIGHT_TILES)}
           maxZoom={19}
         />
+        {satellite && (
+          <TileLayer
+            url={REF_TILES}
+            maxZoom={19}
+          />
+        )}
         <ViewportSync onZoom={setZoom} />
-        <FacilityLoader enabled={enableFacilityLayer && facilitiesOn} onLoad={setFacilities} />
+        <FacilityLoader enabled={enableFacilityLayer && facilitiesOn} onLoad={setFacilityClusters} />
         {facilitiesOn && zoom >= 7 && (
-          <FacilityClusters facilities={facilities} dark={dark} />
+          <FacilityClusters clusters={facilityClusters} dark={isDarkBasemap} />
         )}
         {focusCode && <FocusController code={focusCode} events={events} />}
 
         {events.map((event) => {
           const isSelected = event.event_code === selectedCode;
-          const color = markerColor(event.detection_count, dark);
+          const color = markerColor(event.detection_count, isDarkBasemap);
           const risk = riskByCode.get(event.event_code);
           return (
             <React.Fragment key={event.event_code}>
@@ -422,17 +412,17 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
                   center={[event.latitude, event.longitude]}
                   radius={5000}
                   pathOptions={{
-                    color: dark ? '#E8E4D8' : '#1D4A38',
+                    color: isDarkBasemap ? '#FAFAF7' : '#1D4A38',
                     weight: 1,
                     dashArray: '4 4',
-                    fillColor: dark ? '#E8E4D8' : '#1D4A38',
+                    fillColor: isDarkBasemap ? '#FAFAF7' : '#1D4A38',
                     fillOpacity: 0.06,
                   }}
                 />
               )}
               <Marker
                 position={[event.latitude, event.longitude]}
-                icon={createEventIcon(color, isSelected, dark)}
+                icon={createEventIcon(color, isSelected, isDarkBasemap)}
                 eventHandlers={
                   onSelectEvent
                     ? { click: () => onSelectEvent(event.event_code) }
@@ -481,7 +471,7 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
           <Marker
             key={`hp-${i}`}
             position={[p.latitude, p.longitude]}
-            icon={highlightIcon(dark)}
+            icon={highlightIcon(isDarkBasemap)}
             zIndexOffset={1000}
           >
             <Popup>
