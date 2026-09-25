@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #FAFAF7;
+    color: #1A1712;
+  }
+
+  ::selection {
+    background: #1D4A38;
+    color: #FAFAF7;
+  }
+
+  /* Visible, consistent keyboard focus */
+  :focus-visible {
+    outline: 2px solid #1D4A38;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* Micro-label: uppercase, tracked, muted — used for section labels */
+@layer components {
+  .micro-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted;
+  }
+}
+
+/* Quiet scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8D0BE;
+  border-radius: 4px;
+  border: 2px solid #FAFAF7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #BDB29C;
+}
+
+/* Leaflet — light editorial treatment */
+.leaflet-container {
+  background: #EDECE8 !important;
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #FFFFFF !important;
+  color: #1A1712 !important;
+  border: 1px solid #E9E2D5;
+  box-shadow: 0 1px 3px rgba(26, 23, 18, 0.08), 0 1px 2px rgba(26, 23, 18, 0.06);
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.45;
+}
+
+.leaflet-control-attribution {
+  background: rgba(250, 250, 247, 0.85) !important;
+  color: #A39A8B !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: #6E675C !important;
+}
+
+.leaflet-control-zoom a {
+  color: #1A1712 !important;
+  border-color: #E9E2D5 !important;
+}
+
+/* Marker divIcons must not show Leaflet's default white box */
+.custom-thermal-marker,
+.facility-marker,
+.facility-cluster {
+  background: transparent;
+  border: none;
+}
+
+/* Facility cluster badges (supercluster) */
+.facility-cluster .cluster-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1D4A38;
+  color: #FAFAF7;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  border: 2px solid rgba(250, 250, 247, 0.9);
+  cursor: pointer;
+}
+
+/* Dark map treatment (Live Map page) */
+.map-dark .leaflet-container {
+  background: #0B0F0E !important;
+}
+.map-dark .leaflet-popup-content-wrapper,
+.map-dark .leaflet-popup-tip {
+  background: #111715 !important;
+  color: #E8E4D8 !important;
+  border: 1px solid #2A332F;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+.map-dark .leaflet-popup-content {
+  margin: 12px 14px;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.45;
+}
+.map-dark .leaflet-control-attribution {
+  background: rgba(11, 15, 14, 0.85) !important;
+  color: #6E7A72 !important;
+  font-size: 10px !important;
+}
+.map-dark .leaflet-control-attribution a {
+  color: #9AA39C !important;
+}
+.map-dark .leaflet-bar a {
+  background: #111715 !important;
+  color: #E8E4D8 !important;
+  border-color: #2A332F !important;
+}
+.map-dark .leaflet-bar a:hover {
+  background: #1A201D !important;
+}
+.map-dark .facility-cluster .cluster-badge {
+  background: #2A3A32;
+  color: #E8E4D8;
+  border-color: rgba(232, 228, 216, 0.85);
+}
+
+/* Page transitions: subtle fade + rise, 200ms */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: pageIn 200ms ease-out;
+}
+
+/* Splash logo entrance */
+@keyframes splashIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.splash-in {
+  animation: splashIn 700ms ease-out both;
+}
+
+/* Subtle transitions only */
+@media (prefers-reduced-motion: no-preference) {
+  .transition-quiet {
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Analyst brief: print styles ---- */
+.print-only { display: none; }
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: #fff !important; }
+  main, [role='main'] { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+  a { color: inherit !important; text-decoration: none !important; }
+  /* Keep ember chart bars and badges legible on paper */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

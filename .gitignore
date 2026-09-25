@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# Raw OSM data (large, re-downloadable) - keep derived GeoJSON
+backend/data/india-latest.osm.pbf
+backend/data/*.osm.pbf
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store

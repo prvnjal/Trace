@@ -1,0 +1,38 @@
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: thermal_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-thermal_intel}
+      POSTGRES_USER: ${POSTGRES_USER:-thermal}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_env}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-thermal} -d ${POSTGRES_DB:-thermal_intel}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    container_name: thermal_api
+    restart: unless-stopped
+    # Local secrets (NASA_FIRMS_MAP_KEY) live in the root .env — gitignored,
+    # never committed. Compose tolerates the file being absent.
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://thermal:${POSTGRES_PASSWORD:-change_me_in_env}@postgis:5432/${POSTGRES_DB:-thermal_intel}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgis:
+        condition: service_healthy
+
+volumes:
+  pgdata:

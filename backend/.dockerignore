@@ -1,0 +1,8 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+data/*.osm.pbf
+data/india-latest.osm.pbf
+.env
+.git/

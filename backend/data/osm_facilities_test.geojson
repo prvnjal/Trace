@@ -1,0 +1,3898 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8163572,
+     21.1613101
+    ]
+   },
+   "properties": {
+    "name": "Beghani dying",
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "node",
+    "osm_id": 4717894992
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8297122,
+     21.2149147
+    ]
+   },
+   "properties": {
+    "name": "RADHE SHYAM DIAMONDS LLP",
+    "facility_type": "works",
+    "operator": "RAVI DHOLAKIYA",
+    "osm_type": "node",
+    "osm_id": 8205336080
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8440457,
+     21.2270613
+    ]
+   },
+   "properties": {
+    "name": "Vidhyutpreran Electricals",
+    "facility_type": "works",
+    "operator": "Gautam Ghevariya, Dhaval Sutariya",
+    "osm_type": "node",
+    "osm_id": 8824522689
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.027058,
+     21.6125515
+    ]
+   },
+   "properties": {
+    "name": "Advance Cooling Towers Pvt. Ltd.",
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "node",
+    "osm_id": 11652701133
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6437334,
+     21.1098624
+    ]
+   },
+   "properties": {
+    "name": "ArcelorMittal Nippon Steel India",
+    "facility_type": "works",
+    "operator": "ArcelorMittal Nippon Steel India",
+    "osm_type": "way",
+    "osm_id": 104647203
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6559164,
+     21.160087
+    ]
+   },
+   "properties": {
+    "name": "L&T",
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 104647207
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6867824,
+     21.1705989
+    ]
+   },
+   "properties": {
+    "name": "Kawas Thermal Power Station",
+    "facility_type": "power_plant",
+    "operator": "NTPC",
+    "osm_type": "way",
+    "osm_id": 146235176
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.106921,
+     21.394715
+    ]
+   },
+   "properties": {
+    "name": "Surat Lignite Power Plant",
+    "facility_type": "power_plant",
+    "operator": "Gujarat Industries Power Company Ltd.",
+    "osm_type": "way",
+    "osm_id": 146235297
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9871045,
+     21.342135
+    ]
+   },
+   "properties": {
+    "name": "SUGEN Mega Power Plant",
+    "facility_type": "power_plant",
+    "operator": "Torrent Power",
+    "osm_type": "way",
+    "osm_id": 146657606
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8714696,
+     21.2304892
+    ]
+   },
+   "properties": {
+    "name": "Utran Gas Based Power Station",
+    "facility_type": "power_plant",
+    "operator": "Gujarat State Electricity Corporation Limited",
+    "osm_type": "way",
+    "osm_id": 147084401
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9780674,
+     21.7809175
+    ]
+   },
+   "properties": {
+    "name": "Paguthan GPEC Combined Cycle Power Plant",
+    "facility_type": "power_plant",
+    "operator": "CLP India Private Limited",
+    "osm_type": "way",
+    "osm_id": 160505756
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.2234876,
+     21.5858931
+    ]
+   },
+   "properties": {
+    "name": "Bhavnagar Padva Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 321090332
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6115622,
+     21.7069628
+    ]
+   },
+   "properties": {
+    "name": "DGEN Mega Power Plant",
+    "facility_type": "power_plant",
+    "operator": "Torrent Power",
+    "osm_type": "way",
+    "osm_id": 391690051
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8160624,
+     21.1607814
+    ]
+   },
+   "properties": {
+    "name": "Beghani dying",
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 478769754
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.1281462,
+     21.4239355
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 597309904
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5932749,
+     21.6970331
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866317
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5951014,
+     21.7038639
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "chemical",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866326
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5864433,
+     21.6965235
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866327
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5899637,
+     21.696972
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866328
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5930603,
+     21.6926481
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866329
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6392016,
+     21.7079095
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866330
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6133351,
+     21.7245105
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866331
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6120657,
+     21.7261475
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661866332
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5530794,
+     21.6804198
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879802
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5501991,
+     21.6815063
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879803
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5506501,
+     21.679877
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879804
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5496855,
+     21.6833754
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879805
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5521744,
+     21.6859605
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879806
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5477125,
+     21.6817871
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879807
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5463596,
+     21.6837095
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879808
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5438372,
+     21.6816455
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879809
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5880509,
+     21.691444
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879818
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6302049,
+     21.705024
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661879819
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6206964,
+     21.7045431
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882324
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6176615,
+     21.7034241
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882325
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6214904,
+     21.7087645
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882326
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6192212,
+     21.7088568
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882327
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6175659,
+     21.709354
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882328
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5958236,
+     21.6970212
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661882330
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6874604,
+     21.1592426
+    ]
+   },
+   "properties": {
+    "name": "Hazira Reliance Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885043
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.661985,
+     21.165881
+    ]
+   },
+   "properties": {
+    "name": "GSEG Combined Cycle Power plant",
+    "facility_type": "power_plant",
+    "operator": "Gujarat State Energy Generation",
+    "osm_type": "way",
+    "osm_id": 661885044
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6504367,
+     21.1686624
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885045
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6527313,
+     21.1596682
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885046
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6738225,
+     21.1689145
+    ]
+   },
+   "properties": {
+    "name": "Reliance",
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885047
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0143817,
+     21.6205715
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885049
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0121179,
+     21.624743
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885050
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.018059,
+     21.6283454
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885051
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0213179,
+     21.6274671
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885052
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.047332,
+     21.6282986
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885053
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0438498,
+     21.6298022
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885054
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.031926,
+     21.6271268
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885055
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0296738,
+     21.6245556
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885056
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0287042,
+     21.6246225
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885057
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0290437,
+     21.6266642
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885058
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0301933,
+     21.6292374
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885059
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0360627,
+     21.6298906
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885296
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.03585,
+     21.6274542
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 661885298
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0021039,
+     21.550567
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 693363976
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0355067,
+     21.6101816
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406562
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0366248,
+     21.616391
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406563
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0325103,
+     21.6230356
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406565
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0396569,
+     21.6219019
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406566
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0391065,
+     21.6229983
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406567
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0397729,
+     21.62401
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406568
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0384839,
+     21.6210662
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 694406569
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6787866,
+     21.1659431
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237878
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6489582,
+     21.1492365
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237879
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.650434,
+     21.1603238
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237881
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6512105,
+     21.1636002
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237882
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6590243,
+     21.1531483
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237883
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6589256,
+     21.1591127
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237884
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6444977,
+     21.1588961
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237885
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6488868,
+     21.1613586
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237886
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6589769,
+     21.1645879
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237888
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6567717,
+     21.1487919
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 799237889
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6558735,
+     21.1100577
+    ]
+   },
+   "properties": {
+    "name": "Hazira Power Plant",
+    "facility_type": "power_plant",
+    "operator": "Essar Energy",
+    "osm_type": "way",
+    "osm_id": 823272713
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9995477,
+     21.3421903
+    ]
+   },
+   "properties": {
+    "name": "GENSU Solar Power Plant",
+    "facility_type": "power_plant",
+    "operator": "Torrent Power",
+    "osm_type": "way",
+    "osm_id": 868966721
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0107285,
+     21.7333172
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780483
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6036763,
+     21.7105532
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780499
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6037322,
+     21.7089709
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780500
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6259879,
+     21.6893966
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780501
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6166208,
+     21.692711
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780502
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6139587,
+     21.6926652
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780503
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6113034,
+     21.6926082
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780504
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.617917,
+     21.6966891
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780505
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6244133,
+     21.6933785
+    ]
+   },
+   "properties": {
+    "name": "Dahej OPAL Captive Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780506
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6208996,
+     21.692296
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780507
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6266046,
+     21.7042578
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780539
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6304094,
+     21.7116126
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780540
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6305116,
+     21.7098885
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780541
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6037475,
+     21.7018147
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780543
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6083515,
+     21.6899365
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780544
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.603584,
+     21.6893009
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780545
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5609582,
+     21.6793636
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780546
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5777633,
+     21.6896187
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780547
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5838939,
+     21.686272
+    ]
+   },
+   "properties": {
+    "name": "Dahej Cogen Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780549
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5640524,
+     21.6736567
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780550
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5403903,
+     21.6858165
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780552
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5466656,
+     21.6864816
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 909780553
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9262837,
+     21.4599089
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910042987
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9371508,
+     21.449862
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910042989
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9079584,
+     21.4861893
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910042994
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0089509,
+     21.7276347
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910043005
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9047681,
+     21.7781811
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269940
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8979286,
+     21.7760808
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269941
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9052875,
+     21.7815782
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269942
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9087605,
+     21.7835411
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269943
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8943045,
+     21.7779003
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269944
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8093429,
+     21.7779788
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269945
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8052986,
+     21.7849336
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269946
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8310688,
+     21.7964117
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269948
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.824664,
+     21.8000029
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269949
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5488296,
+     21.6707319
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269974
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5519034,
+     21.6784563
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269975
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5528044,
+     21.6820372
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269976
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6890471,
+     21.7116709
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269977
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6286424,
+     21.7216647
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269978
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6383429,
+     21.7169238
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269979
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6257296,
+     21.7299467
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269981
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6175185,
+     21.7288686
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269982
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5867008,
+     21.6944686
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269983
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6180642,
+     21.7112577
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269984
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6281741,
+     21.698478
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269985
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6292285,
+     21.6984099
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269986
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6302219,
+     21.6983136
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269987
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6361227,
+     21.6977345
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269988
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6365379,
+     21.6995348
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269989
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6353687,
+     21.6996616
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269990
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6300801,
+     21.7027051
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269991
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.627933,
+     21.6999738
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269992
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.7611194,
+     21.7174975
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269993
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.7566496,
+     21.7168923
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 910269994
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6401427,
+     21.1195066
+    ]
+   },
+   "properties": {
+    "name": "Hazira II (Essar) Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 916863896
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8606302,
+     21.7947837
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538159
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8283577,
+     21.7910269
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538161
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8215892,
+     21.7812585
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538162
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8001523,
+     21.7942451
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538163
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8274706,
+     21.7992359
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538164
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9002014,
+     21.7979023
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 925538165
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5742244,
+     21.6833585
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 944372564
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0196521,
+     21.6256419
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588743
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0212468,
+     21.6210278
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588744
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.020224,
+     21.6210861
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588745
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0192882,
+     21.6213389
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588746
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0193987,
+     21.6223123
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588747
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0197145,
+     21.6231982
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588748
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0218866,
+     21.6178553
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588749
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0468025,
+     21.6255524
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588750
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0437242,
+     21.6260263
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588751
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0386064,
+     21.6255479
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588752
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0403281,
+     21.6267903
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588753
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0402228,
+     21.6254606
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588754
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0365402,
+     21.6237926
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588755
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0344324,
+     21.6225162
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588756
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0339168,
+     21.6196538
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588757
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0337178,
+     21.6180511
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588758
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0338076,
+     21.6172768
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588759
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0338185,
+     21.6143804
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588760
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0324662,
+     21.6173643
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588761
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0319895,
+     21.6178386
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588762
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0316588,
+     21.6178607
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588763
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0299344,
+     21.6174801
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588764
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0281682,
+     21.6182709
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588765
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0235293,
+     21.618894
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588766
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0168454,
+     21.6190104
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588769
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0175189,
+     21.6197761
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588770
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0172851,
+     21.6166768
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588771
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0070385,
+     21.6177307
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588772
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0077298,
+     21.6176103
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588773
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0151083,
+     21.6168396
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588774
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0147093,
+     21.6175002
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588775
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0135319,
+     21.6178187
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588776
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0109365,
+     21.6290904
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588777
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0144869,
+     21.6302151
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588778
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0083196,
+     21.6229629
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588779
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0070149,
+     21.6204896
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588780
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0246398,
+     21.626762
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588781
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0279752,
+     21.6233834
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588782
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0251378,
+     21.6235846
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588783
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0264516,
+     21.6209512
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588784
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0251751,
+     21.6196678
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588785
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0145186,
+     21.623856
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588786
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0154721,
+     21.6269773
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588787
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0154558,
+     21.628024
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588788
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0510439,
+     21.6154192
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588789
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0457304,
+     21.6184893
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588790
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0411944,
+     21.6302375
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588791
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0462909,
+     21.6309359
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588792
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0479466,
+     21.6313135
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588793
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0483947,
+     21.6315251
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588794
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.0479563,
+     21.6329663
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 972588795
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.1226718,
+     21.4109662
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1002373808
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.825939,
+     21.0084774
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1002374524
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.7194522,
+     21.1670046
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1002418492
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5758445,
+     21.7218842
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1003091525
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6335787,
+     21.7069489
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648050
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6387557,
+     21.7047782
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648051
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6385303,
+     21.7082694
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648052
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6413257,
+     21.7049858
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648053
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6430127,
+     21.7119233
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648054
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6337651,
+     21.7046183
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648055
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6156771,
+     21.7292883
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648065
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6174375,
+     21.7299457
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648066
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5711879,
+     21.6874258
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648068
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5700043,
+     21.6823074
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648069
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5668766,
+     21.6804994
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648070
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5798523,
+     21.6846765
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "chemical",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648072
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5767238,
+     21.6843037
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648073
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5524874,
+     21.6839179
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648074
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5488438,
+     21.686046
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "works",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1008648075
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6912514,
+     21.709887
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1120225231
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.1367856,
+     21.6567244
+    ]
+   },
+   "properties": {
+    "name": "DCM Shriram Bharuch Power Station",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1133329850
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.7050975,
+     21.1663207
+    ]
+   },
+   "properties": {
+    "name": "KRIBHCO Hazira Power Station",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1145455077
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6561244,
+     21.1146167
+    ]
+   },
+   "properties": {
+    "name": "Bhander Power Plant",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1157017752
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.7476535,
+     21.7204253
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1213408808
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6843657,
+     21.168996
+    ]
+   },
+   "properties": {
+    "name": "Kawas solar farm",
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1261842169
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9870562,
+     21.0258076
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1266694993
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.8980141,
+     21.2350698
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1467603764
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     73.1931013,
+     21.7990429
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1467608881
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.899158,
+     20.9753677
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1467608891
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.0346767,
+     21.2658702
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1468068752
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.0353687,
+     21.261106
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1468068754
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.0199674,
+     21.2321321
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1468068755
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     71.9965946,
+     21.2435923
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1468068756
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.0207668,
+     21.2485071
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1468068760
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.5994343,
+     21.7034607
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1495917829
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6889663,
+     21.1655645
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1499319632
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.6886284,
+     21.1725609
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1499738586
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     72.9357061,
+     21.447773
+    ]
+   },
+   "properties": {
+    "name": null,
+    "facility_type": "power_plant",
+    "operator": null,
+    "osm_type": "way",
+    "osm_id": 1508891720
+   }
+  }
+ ]
+}
