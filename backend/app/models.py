@@ -100,3 +100,22 @@ class DataRefresh(Base):
     detections_fetched: Mapped[int] = mapped_column(Integer, nullable=False)
     detections_new: Mapped[int] = mapped_column(Integer, nullable=False)
     events_built: Mapped[int] = mapped_column(Integer, nullable=False)
+
+
+class RefreshEventSnapshot(Base):
+    """Per-event state snapshot captured after each FIRMS data refresh.
+
+    Powers the "Since last refresh" changes digest (diffing current vs previous).
+    """
+    __tablename__ = "refresh_event_snapshots"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    refresh_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("data_refreshes.id", ondelete="CASCADE"), nullable=False
+    )
+    event_code: Mapped[str] = mapped_column(String(50), nullable=False)
+    detection_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    max_frp: Mapped[float | None] = mapped_column(Double)
+    tier: Mapped[str] = mapped_column(String(20), nullable=False)
+    nearest_facility_km: Mapped[float | None] = mapped_column(Double)
+

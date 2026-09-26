@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, RefreshCw } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
@@ -8,9 +8,9 @@ import { Term, GLOSSARY, HonestyNote } from '../components/Term';
 import { ThermalMapView } from '../components/ThermalMapView';
 import { RISK_META, RISK_TIERS } from '../utils/risk';
 import { displayFacilityName, fmtDate, fmtDateTime, fmtInt, fmtKm } from '../utils/format';
+import { fetchChangesSinceLastRefresh, type ChangesDigestResponse } from '../services/api';
 
 const STEPS = [
-
   {
     n: '01',
     title: 'Detect',
@@ -46,6 +46,22 @@ const STEPS = [
 
 export const Overview: React.FC = () => {
   const { stats, dataStatus, events, riskByCode, tierCounts, loading, error, reload, refreshNow, refreshing, refreshError } = useTraceData();
+
+  const [digest, setDigest] = useState<ChangesDigestResponse | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchChangesSinceLastRefresh()
+      .then((res) => {
+        if (!cancelled) setDigest(res);
+      })
+      .catch((err) => {
+        console.error('Failed to load refresh digest:', err);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [dataStatus?.refreshed_at]);
 
   const highPriority = useMemo(() => {
     return [...events]
@@ -141,6 +157,88 @@ export const Overview: React.FC = () => {
           value={fmtInt(stats?.events_within_5km_of_facility)}
           sub="Within 5 km of a facility"
         />
+      </div>
+
+      {/* Since last refresh digest */}
+      <div className="mt-8">
+        <Section title="Since last refresh">
+          {!digest?.since ? (
+            <EmptyState
+              title="No previous refresh to compare against yet"
+              hint="This digest activates after the next scheduled refresh."
+            />
+          ) : (
+            <div>
+              <p className="text-xs text-faint mb-5">
+                Compared against the refresh at {fmtDateTime(digest.since)}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-8 pb-6 border-b border-hairline">
+                <Stat label="New events" value={fmtInt(digest.counts.new_events_count)} />
+                <Stat label="Growing events" value={fmtInt(digest.counts.grown_events_count)} />
+                <Stat label="New near industry" value={fmtInt(digest.counts.new_near_industry_count)} />
+              </div>
+
+              {digest.counts.new_events_count === 0 && digest.counts.grown_events_count === 0 ? (
+                <p className="mt-4 text-xs text-muted">
+                  No new events since {fmtDateTime(digest.since)}.
+                </p>
+              ) : (
+                <ul className="divide-y divide-hairline mt-4">
+                  {digest.grown_events.slice(0, 5).map((g) => (
+                    <li key={g.event_code}>
+                      <Link
+                        to={`/events/${encodeURIComponent(g.event_code)}`}
+                        className="transition-quiet flex items-center gap-3 py-3 hover:bg-wash/60 -mx-2 px-2 rounded-sm"
+                      >
+                        <RiskBadge assessment={{ tier: g.tier, reasons: [] }} />
+                        <span className="font-mono text-[13px] font-semibold text-ink tabular-nums">
+                          {g.event_code}
+                        </span>
+                        <span className="ml-auto text-xs text-muted tabular-nums text-right">
+                          {g.current_count} detections{' '}
+                          <span className="font-semibold text-ember-deep">(+{g.delta})</span>
+                          <br />
+                          <span className="text-faint">
+                            {g.nearest_facility_name
+                              ? displayFacilityName(g.nearest_facility_name, g.nearest_facility_type)
+                              : 'no facility within 5 km'}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                  {digest.new_events
+                    .slice(0, Math.max(0, 5 - digest.grown_events.length))
+                    .map((e) => (
+                      <li key={e.event_code}>
+                        <Link
+                          to={`/events/${encodeURIComponent(e.event_code)}`}
+                          className="transition-quiet flex items-center gap-3 py-3 hover:bg-wash/60 -mx-2 px-2 rounded-sm"
+                        >
+                          {riskByCode.get(e.event_code) && (
+                            <RiskBadge assessment={riskByCode.get(e.event_code)!} />
+                          )}
+                          <span className="font-mono text-[13px] font-semibold text-ink tabular-nums">
+                            {e.event_code}
+                          </span>
+                          <span className="ml-auto text-xs text-muted tabular-nums text-right">
+                            <span className="text-pine-deep font-semibold">New ({e.detection_count} det.)</span>
+                            <br />
+                            <span className="text-faint">
+                              {e.nearest_facility_name
+                                ? displayFacilityName(e.nearest_facility_name, e.nearest_facility_type)
+                                : 'no facility within 5 km'}
+                            </span>
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </Section>
       </div>
 
       {/* Featured event — the guided entry point for a demo or investigation */}

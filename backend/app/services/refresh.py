@@ -29,7 +29,7 @@ from sqlalchemy import func, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session
 
-from app.models import DataRefresh, ThermalDetection, ThermalEvent
+from app.models import DataRefresh, RefreshEventSnapshot, ThermalDetection, ThermalEvent
 from app.services import firms_ingest
 from app.services.event_engine import cluster_detections
 
@@ -38,6 +38,51 @@ log = logging.getLogger(__name__)
 # Events are rebuilt from detections in this trailing window, so a refresh
 # never resurfaces fires that stopped burning days ago.
 CLUSTER_WINDOW_DAYS = 6
+
+
+def compute_event_tier(detection_count: int, facility_distance_m: float | None) -> str:
+    n = detection_count
+    d_km = facility_distance_m / 1000.0 if facility_distance_m is not None else None
+    if n >= 25 and d_km is not None and d_km <= 5.0:
+        return "CRITICAL"
+    elif n >= 10 or (n >= 3 and d_km is not None and d_km <= 1.0):
+        return "HIGH"
+    elif n >= 3 or (d_km is not None and d_km <= 5.0):
+        return "MEDIUM"
+    return "LOW"
+
+
+def ensure_initial_snapshot(db: Session) -> None:
+    """If data_refreshes exists but no snapshot rows exist, create an initial snapshot
+    from the current database state for the latest refresh row.
+    """
+    has_snaps = db.query(func.count(RefreshEventSnapshot.id)).scalar() or 0
+    if has_snaps > 0:
+        return
+    latest_ref = db.query(DataRefresh).order_by(DataRefresh.id.desc()).first()
+    if not latest_ref:
+        return
+    all_events = db.query(ThermalEvent).all()
+    if not all_events:
+        return
+    snapshot_rows = []
+    for ev in all_events:
+        d_km = ev.facility_distance_m / 1000.0 if ev.facility_distance_m is not None else None
+        tier = compute_event_tier(ev.detection_count, ev.facility_distance_m)
+        snapshot_rows.append(
+            RefreshEventSnapshot(
+                refresh_id=latest_ref.id,
+                event_code=ev.event_code,
+                detection_count=ev.detection_count,
+                max_frp=ev.max_frp,
+                tier=tier,
+                nearest_facility_km=round(d_km, 3) if d_km is not None else None,
+            )
+        )
+    if snapshot_rows:
+        db.add_all(snapshot_rows)
+        db.commit()
+        log.info("created initial snapshot for refresh %d (%d events)", latest_ref.id, len(snapshot_rows))
 
 
 def _insert_detections(db: Session, detections: list[dict]) -> int:
@@ -213,17 +258,35 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
             ).update({"event_id": row.id}, synchronize_session=False)
     db.commit()
 
-    # 5. Log the refresh so the UI can show an exact "updated from FIRMS" time.
-    db.add(
-        DataRefresh(
-            refreshed_at=fetched_at,
-            source="FIRMS",
-            days=days,
-            detections_fetched=len(detections),
-            detections_new=new_detections,
-            events_built=len(events),
-        )
+    # 5. Log the refresh so the UI can show an exact "updated from FIRMS" time, and snapshot events.
+    ref_row = DataRefresh(
+        refreshed_at=fetched_at,
+        source="FIRMS",
+        days=days,
+        detections_fetched=len(detections),
+        detections_new=new_detections,
+        events_built=len(events),
     )
+    db.add(ref_row)
+    db.flush()
+
+    all_events = db.query(ThermalEvent).all()
+    snapshot_rows = []
+    for ev in all_events:
+        d_km = ev.facility_distance_m / 1000.0 if ev.facility_distance_m is not None else None
+        tier = compute_event_tier(ev.detection_count, ev.facility_distance_m)
+        snapshot_rows.append(
+            RefreshEventSnapshot(
+                refresh_id=ref_row.id,
+                event_code=ev.event_code,
+                detection_count=ev.detection_count,
+                max_frp=ev.max_frp,
+                tier=tier,
+                nearest_facility_km=round(d_km, 3) if d_km is not None else None,
+            )
+        )
+    if snapshot_rows:
+        db.add_all(snapshot_rows)
     db.commit()
 
     summary = {

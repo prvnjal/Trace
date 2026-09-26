@@ -22,7 +22,8 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from app.db import engine, get_db
-from app.models import DataRefresh, Facility, ThermalDetection, ThermalEvent
+from app.models import Base, DataRefresh, Facility, RefreshEventSnapshot, ThermalDetection, ThermalEvent
+from app.services.refresh import ensure_initial_snapshot
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +44,11 @@ def _refresh_interval_hours() -> float:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _scheduler
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as exc:
+        log.warning("Could not create DB tables automatically: %s", exc)
+
     hours = _refresh_interval_hours()
     if hours > 0:
         # First run shortly after boot (DB needs a moment), then on interval.
@@ -376,6 +382,147 @@ def event_detections(
             }
             for r in rows
         ],
+    }
+
+
+@app.get("/changes/since-last-refresh")
+def changes_since_last_refresh(db: Session = Depends(get_db)) -> dict:
+    """Digest of changes since the previous data refresh (new events, growing events, cooled off count)."""
+    ensure_initial_snapshot(db)
+
+    refreshed_ids = (
+        db.query(RefreshEventSnapshot.refresh_id, DataRefresh.refreshed_at)
+        .join(DataRefresh, RefreshEventSnapshot.refresh_id == DataRefresh.id)
+        .group_by(RefreshEventSnapshot.refresh_id, DataRefresh.refreshed_at)
+        .order_by(DataRefresh.refreshed_at.desc())
+        .all()
+    )
+
+    empty_response = {
+        "since": None,
+        "note": "No previous refresh to compare against yet",
+        "new_events": [],
+        "grown_events": [],
+        "new_near_industry": [],
+        "cooled_off_count": 0,
+        "counts": {
+            "new_events_count": 0,
+            "grown_events_count": 0,
+            "new_near_industry_count": 0,
+        },
+    }
+
+    if len(refreshed_ids) < 2:
+        return empty_response
+
+    curr_refresh_id = refreshed_ids[0][0]
+    prev_refresh_id = refreshed_ids[1][0]
+    prev_refreshed_at = refreshed_ids[1][1]
+
+    since_str = prev_refreshed_at.isoformat() if prev_refreshed_at else None
+
+    prev_snaps = {
+        s.event_code: s
+        for s in db.query(RefreshEventSnapshot)
+        .filter(RefreshEventSnapshot.refresh_id == prev_refresh_id)
+        .all()
+    }
+    curr_snaps = {
+        s.event_code: s
+        for s in db.query(RefreshEventSnapshot)
+        .filter(RefreshEventSnapshot.refresh_id == curr_refresh_id)
+        .all()
+    }
+
+    prev_codes = set(prev_snaps.keys())
+    curr_codes = set(curr_snaps.keys())
+
+    new_codes = curr_codes - prev_codes
+    cooled_off_count = len(prev_codes - curr_codes)
+
+    grown_items = []
+    common_codes = curr_codes & prev_codes
+    for code in common_codes:
+        p_cnt = prev_snaps[code].detection_count
+        c_cnt = curr_snaps[code].detection_count
+        delta = c_cnt - p_cnt
+        if delta >= 5 or (p_cnt > 0 and c_cnt >= 2 * p_cnt and delta > 0):
+            grown_items.append({
+                "event_code": code,
+                "previous_count": p_cnt,
+                "current_count": c_cnt,
+                "delta": delta,
+                "tier": curr_snaps[code].tier,
+            })
+
+    grown_items.sort(key=lambda x: x["delta"], reverse=True)
+
+    needed_codes = new_codes | {g["event_code"] for g in grown_items}
+    events_orm = (
+        db.query(ThermalEvent)
+        .filter(ThermalEvent.event_code.in_(needed_codes))
+        .all()
+        if needed_codes
+        else []
+    )
+    events_by_code = {e.event_code: e for e in events_orm}
+
+    fac_ids = {e.nearest_facility_id for e in events_orm if e.nearest_facility_id}
+    fac_map = (
+        {f.id: f for f in db.query(Facility).filter(Facility.id.in_(fac_ids)).all()}
+        if fac_ids
+        else {}
+    )
+    ev_ids = [e.id for e in events_orm]
+    conf_counts = get_confidence_counts_by_event(db, ev_ids)
+
+    new_events_all = []
+    for code in new_codes:
+        ev = events_by_code.get(code)
+        if ev:
+            summary = event_summary(ev, fac_map.get(ev.nearest_facility_id), conf_counts.get(ev.id))
+            new_events_all.append(summary)
+
+    new_events_all.sort(key=lambda x: x["detection_count"], reverse=True)
+    new_events_count = len(new_events_all)
+    new_events_capped = new_events_all[:20]
+
+    new_near_industry = [
+        e for e in new_events_all
+        if e.get("facility_distance_m") is not None and e["facility_distance_m"] <= 1000
+    ]
+    new_near_industry_count = len(new_near_industry)
+
+    enriched_grown = []
+    for g in grown_items:
+        code = g["event_code"]
+        ev = events_by_code.get(code)
+        fac = fac_map.get(ev.nearest_facility_id) if ev else None
+        item = {
+            "event_code": code,
+            "previous_count": g["previous_count"],
+            "current_count": g["current_count"],
+            "delta": g["delta"],
+            "tier": g["tier"],
+            "nearest_facility_name": fac.name if fac else None,
+            "nearest_facility_type": fac.facility_type if fac else None,
+            "facility_distance_m": ev.facility_distance_m if ev else None,
+            "event_summary": event_summary(ev, fac, conf_counts.get(ev.id)) if ev else None,
+        }
+        enriched_grown.append(item)
+
+    return {
+        "since": since_str,
+        "note": None,
+        "new_events": new_events_capped,
+        "grown_events": enriched_grown,
+        "new_near_industry": new_near_industry[:20],
+        "cooled_off_count": cooled_off_count,
+        "counts": {
+            "new_events_count": new_events_count,
+            "grown_events_count": len(enriched_grown),
+            "new_near_industry_count": new_near_industry_count,
+        },
     }
 
 

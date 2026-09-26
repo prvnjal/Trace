@@ -177,6 +177,37 @@ export const fetchRefreshStatus = async (): Promise<RefreshJobStatus> => {
   return res.data;
 };
 
+export interface ChangeDigestEvent {
+  event_code: string;
+  previous_count?: number;
+  current_count: number;
+  delta?: number;
+  tier: import('../utils/risk').RiskTier;
+  nearest_facility_name: string | null;
+  nearest_facility_type: string | null;
+  facility_distance_m: number | null;
+  event_summary?: EventSummary;
+}
+
+export interface ChangesDigestResponse {
+  since: string | null;
+  note?: string | null;
+  new_events: EventSummary[];
+  grown_events: ChangeDigestEvent[];
+  new_near_industry: EventSummary[];
+  cooled_off_count: number;
+  counts: {
+    new_events_count: number;
+    grown_events_count: number;
+    new_near_industry_count: number;
+  };
+}
+
+export const fetchChangesSinceLastRefresh = async (): Promise<ChangesDigestResponse> => {
+  const res = await api.get('/changes/since-last-refresh');
+  return res.data;
+};
+
 /**
  * Loads every facility (14,963) via sequential paged requests.
  * Used once at startup so facility search/filter/pagination is instant
