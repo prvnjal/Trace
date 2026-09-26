@@ -26,8 +26,8 @@ export const fmtInt = (n: number | null | undefined): string =>
   n == null ? '—' : n.toLocaleString('en-IN');
 
 const SAT_LABELS: Record<string, string> = {
-  VIIRS_SNPP_NRT: 'VIIRS · SNPP',
-  VIIRS_NOAA20_NRT: 'VIIRS · NOAA-20',
+  VIIRS_SNPP_NRT: 'VIIRS SNPP',
+  VIIRS_NOAA20_NRT: 'VIIRS NOAA-20',
   MODIS_NRT: 'MODIS',
 };
 
@@ -38,6 +38,21 @@ const FACILITY_TYPE_LABELS: Record<string, string> = {
   power_plant: 'Power plant',
   industrial_site: 'Industrial site',
   petroleum_well: 'Petroleum well',
+};
+
+const LANDUSE_CLASS_LABELS: Record<string, string> = {
+  farmland: 'Farmland',
+  forest: 'Forest',
+  scrub_grass: 'Scrub / grassland',
+  industrial_urban: 'Industrial / urban',
+  wetland: 'Wetland',
+  unknown: 'Unknown',
+};
+
+/** Human label for an OSM land-use class, e.g. "scrub_grass" -> "Scrub / grassland". */
+export const landuseClassLabel = (c: string | null | undefined): string => {
+  if (!c) return 'Unknown';
+  return LANDUSE_CLASS_LABELS[c] ?? c.replace(/_/g, ' ');
 };
 
 export const facilityTypeLabel = (t: string | null): string => {

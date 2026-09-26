@@ -33,6 +33,10 @@ services:
     depends_on:
       postgis:
         condition: service_healthy
+    volumes:
+      # Persist the OSM land-use polygon cache across rebuilds so refreshes
+      # only query Overpass for genuinely new event locations.
+      - ./backend/data/landuse_cache:/srv/backend/data/landuse_cache
 
 volumes:
   pgdata:

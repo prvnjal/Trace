@@ -20,11 +20,13 @@ from __future__ import annotations
 
 import json
 import logging
+import random
 import sys
 import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from urllib.error import HTTPError
 
 log = logging.getLogger(__name__)
 
@@ -70,11 +72,28 @@ def post_query(query: str, retries: int = QUERY_RETRIES) -> dict:
             try:
                 with urllib.request.urlopen(req, timeout=CLIENT_TIMEOUT_S) as resp:
                     return json.loads(resp.read().decode("utf-8"))
+            except HTTPError as exc:
+                # 429: the server is asking us to slow down — honor it.
+                wait = 0
+                if exc.code == 429:
+                    try:
+                        wait = min(float(exc.headers.get("Retry-After") or 30), 120)
+                    except (TypeError, ValueError):
+                        wait = 30
+                    log.warning("overpass %s rate-limited (attempt %d); "
+                                "sleeping %.0fs per Retry-After",
+                                base, attempt + 1, wait)
+                    time.sleep(wait)
+                else:
+                    log.warning("overpass %s HTTP %s (attempt %d)",
+                                base, exc.code, attempt + 1)
+                last_err = exc
             except Exception as exc:
                 log.warning("overpass %s failed (attempt %d): %s",
                             base, attempt + 1, exc)
                 last_err = exc
-        time.sleep(10 * (attempt + 1))
+        # Gentle backoff with jitter between full retry rounds.
+        time.sleep(10 * (attempt + 1) + random.uniform(0, 5))
     raise RuntimeError(f"all overpass endpoints failed: {last_err}")
 
 

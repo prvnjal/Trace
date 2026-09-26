@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 
 from geoalchemy2 import WKTElement
@@ -32,6 +33,7 @@ from sqlalchemy.orm import Session
 from app.models import DataRefresh, RefreshEventSnapshot, ThermalDetection, ThermalEvent
 from app.services import firms_ingest
 from app.services.event_engine import cluster_detections
+from app.services.landuse import tag_centroids
 
 log = logging.getLogger(__name__)
 
@@ -188,8 +190,24 @@ def _enrich_with_facilities(db: Session, lon: float, lat: float) -> dict:
     }
 
 
-def refresh_from_firms(db: Session, days: int | None = None) -> dict:
-    """Run a full FIRMS refresh. Returns a summary dict."""
+def refresh_from_firms(
+    db: Session,
+    days: int | None = None,
+    progress: Callable[[str], None] | None = None,
+) -> dict:
+    """Run a full FIRMS refresh. Returns a summary dict.
+
+    ``progress``, when given, is called with a short human-readable stage
+    label as the refresh advances (surfaced via /admin/refresh/status).
+    """
+    def _stage(label: str) -> None:
+        log.info("refresh stage: %s", label)
+        if progress is not None:
+            try:
+                progress(label)
+            except Exception:
+                log.warning("refresh progress callback failed", exc_info=True)
+
     bbox, sources, env_days = firms_ingest.env_defaults()
     if days is None:
         days = env_days
@@ -199,13 +217,16 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
     fetched_at = datetime.now(timezone.utc)
 
     # 1. Fetch + normalize from the FIRMS API (key from environment).
+    _stage(f"fetching {days}-day FIRMS window")
     detections = firms_ingest.fetch_india(days=days, sources=sources, bbox=bbox)
     log.info("refresh: fetched %d detections (%d-day window)", len(detections), days)
 
     # 2. Store new detections (idempotent).
+    _stage(f"storing {len(detections)} detections")
     new_detections = _insert_detections(db, detections)
 
     # 3. Rebuild events from the recent window.
+    _stage("clustering detections into events")
     recent = _recent_detection_dicts(db, CLUSTER_WINDOW_DAYS)
     events = cluster_detections(recent)
     log.info("refresh: clustered %d detections into %d events", len(recent), len(events))
@@ -217,9 +238,28 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
     #    old links). Everything commits once at the end: the app never shows
     #    an empty event table mid-refresh, and a failed refresh rolls back to
     #    the previous events instead of leaving zero.
+    #
+    #    Land-use carry-over: event codes are deterministic, so an event that
+    #    survives across refreshes keeps its OSM land-use tag without another
+    #    Overpass lookup. Only genuinely new codes — plus previously
+    #    *unverified* unknowns (transient Overpass failures, not genuine
+    #    no-matches) — are tagged (after commit, so a slow Overpass never
+    #    holds the event table empty).
+    prev_landuse = {
+        code: (cls, tag, inside, dist, verified)
+        for code, cls, tag, inside, dist, verified in db.query(
+            ThermalEvent.event_code,
+            ThermalEvent.landuse_class,
+            ThermalEvent.landuse_tag,
+            ThermalEvent.landuse_inside,
+            ThermalEvent.landuse_distance_m,
+            ThermalEvent.landuse_verified,
+        ).all()
+    }
     db.query(ThermalEvent).delete()
 
     used_codes: set[str] = set()
+    needs_landuse: list[ThermalEvent] = []
     for ev in events:
         lon, lat = ev["centroid_lon"], ev["centroid_lat"]
         fac = _enrich_with_facilities(db, lon, lat)
@@ -229,6 +269,17 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
             code = f"{base_code}-{suffix}"
             suffix += 1
         used_codes.add(code)
+        lu = prev_landuse.get(code)
+        # A carried-over tag is final if it names a real class OR it is a
+        # *verified* "unknown" (a successful lookup that genuinely found no
+        # matching polygon — never re-queried). Only unverified unknowns
+        # (transient Overpass failures) and codes with no tag at all are
+        # looked up below; this is also what backfills pre-migration events.
+        # Crucially, a verified unknown keeps its verified flag when carried
+        # over — otherwise it would silently become retryable every refresh.
+        lu_final = lu is not None and (
+            (lu[0] or "unknown") != "unknown" or bool(lu[4])
+        )
         row = ThermalEvent(
             event_code=code,
             centroid_lat=lat,
@@ -248,7 +299,14 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
             facility_distance_m=fac["facility_distance_m"],
             facilities_within_1km=fac["facilities_within_1km"],
             facilities_within_5km=fac["facilities_within_5km"],
+            landuse_class=lu[0] if lu_final else "unknown",
+            landuse_tag=lu[1] if lu_final else None,
+            landuse_inside=lu[2] if lu_final else None,
+            landuse_distance_m=lu[3] if lu_final else None,
+            landuse_verified=lu[4] if lu_final else None,
         )
+        if not lu_final:
+            needs_landuse.append(row)
         db.add(row)
         db.flush()  # assign row.id so detections can link to it
         det_ids = [int(i) for i in (ev.get("detection_ids") or [])]
@@ -258,7 +316,25 @@ def refresh_from_firms(db: Session, days: int | None = None) -> dict:
             ).update({"event_id": row.id}, synchronize_session=False)
     db.commit()
 
+    # 4b. Tag genuinely new event codes (plus unverified unknowns from failed
+    # Overpass lookups) with OSM land-use context. Runs after the commit above
+    # so the event table is never left empty mid-refresh if Overpass is slow;
+    # tag_centroids never raises (failures -> unverified "unknown", retried
+    # next refresh; verified no-matches are left alone).
+    if needs_landuse:
+        _stage(f"tagging land cover for {len(needs_landuse)} events (OSM)")
+        tags = tag_centroids([(r.centroid_lat, r.centroid_lon) for r in needs_landuse])
+        for row, t in zip(needs_landuse, tags):
+            row.landuse_class = t["landuse_class"]
+            row.landuse_tag = t["landuse_tag"]
+            row.landuse_inside = t["inside"]
+            row.landuse_distance_m = t["distance_m"]
+            row.landuse_verified = t["ok"]
+        db.commit()
+        log.info("refresh: land-use tagged %d new events", len(needs_landuse))
+
     # 5. Log the refresh so the UI can show an exact "updated from FIRMS" time, and snapshot events.
+    _stage("finalizing refresh log")
     ref_row = DataRefresh(
         refreshed_at=fetched_at,
         source="FIRMS",

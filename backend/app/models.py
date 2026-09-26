@@ -9,6 +9,7 @@ from geoalchemy2 import Geometry
 from sqlalchemy import (
     ARRAY,
     BigInteger,
+    Boolean,
     Date,
     DateTime,
     Double,
@@ -64,6 +65,16 @@ class ThermalEvent(Base):
     facility_distance_m: Mapped[float | None] = mapped_column(Double)
     facilities_within_1km: Mapped[int] = mapped_column(Integer, default=0)
     facilities_within_5km: Mapped[int] = mapped_column(Integer, default=0)
+    # OSM land-use context at the event centroid (populated by the land-use
+    # enrichment stage of refresh; "unknown" until looked up).
+    landuse_class: Mapped[str] = mapped_column(String(30), default="unknown")
+    landuse_tag: Mapped[str | None] = mapped_column(String(60))
+    landuse_inside: Mapped[bool | None] = mapped_column(Boolean)
+    landuse_distance_m: Mapped[float | None] = mapped_column(Double)
+    # True = the Overpass lookup behind this tag succeeded (a verified
+    # "unknown" is a genuine no-match, not retried). NULL/False = transient
+    # failure or never attempted -> retried on the next refresh.
+    landuse_verified: Mapped[bool | None] = mapped_column(Boolean)
 
 
 class ThermalDetection(Base):

@@ -8,6 +8,9 @@ import { PageHeader, Section, DefRow, EmptyState, Skeleton } from '../components
 import { RiskBadge, RiskReasons } from '../components/RiskBadge';
 import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { TimelineChart } from '../components/TimelineChart';
+import { SatelliteStrip } from '../components/SatelliteStrip';
+import { DetectionCharacter } from '../components/DetectionCharacter';
+import { FootprintMap } from '../components/FootprintMap';
 import { Term, GLOSSARY, HonestyNote } from '../components/Term';
 import { assessRisk } from '../utils/risk';
 import { analystNotes } from '../utils/analyst';
@@ -19,6 +22,7 @@ import {
   facilityTypeLabel,
   formatConfidenceNote,
   isUnnamedFacility,
+  landuseClassLabel,
   satLabel,
 } from '../utils/format';
 
@@ -26,7 +30,7 @@ import {
 export const EventDetail: React.FC = () => {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const { riskByCode, confidenceFilter, setConfidenceFilter, stats } = useTraceData();
+  const { confidenceFilter, setConfidenceFilter, stats } = useTraceData();
   const [event, setEvent] = useState<EventDetailType | null>(null);
   const [detections, setDetections] = useState<EventDetection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,7 +93,10 @@ export const EventDetail: React.FC = () => {
     );
   }
 
-  const assessment = riskByCode.get(event.event_code) ?? assessRisk(event);
+  // Assessed from this page's own fresh detail payload — never from the
+  // events-list context, which can disagree after a refresh re-clusters an
+  // event between the two fetches (stale "102" vs fresh "100" style drift).
+  const assessment = assessRisk(event);
   const spanDays =
     event.first_detected && event.last_detected
       ? (new Date(event.last_detected).getTime() - new Date(event.first_detected).getTime()) /
@@ -112,6 +119,25 @@ export const EventDetail: React.FC = () => {
   };
 
   const confNote = formatConfidenceNote(event.confidence_counts);
+
+  // EO Browser deep link: Sentinel-2 true color around the event's first
+  // detection day, for visual inspection (smoke plume, infrastructure,
+  // burn scar). Browsing needs no login.
+  const eoBrowserUrl = (() => {
+    const lat = event.latitude.toFixed(4);
+    const lon = event.longitude.toFixed(4);
+    const d = event.first_detected ? new Date(event.first_detected) : new Date();
+    const iso = (dt: Date) => dt.toISOString().slice(0, 10);
+    const from = new Date(d);
+    from.setDate(from.getDate() - 1);
+    const to = new Date(d);
+    to.setDate(to.getDate() + 1);
+    return (
+      'https://apps.sentinel-hub.com/eo-browser/?zoom=12' +
+      `&lat=${lat}&lng=${lon}&themeId=DEFAULT-THEME&datasetId=S2L2A` +
+      `&fromTime=${iso(from)}T00%3A00%3A00.000Z&toTime=${iso(to)}T23%3A59%3A59.999Z`
+    );
+  })();
 
   return (
     <div className="max-w-3xl">
@@ -218,6 +244,54 @@ export const EventDetail: React.FC = () => {
           )}
         </Section>
 
+        <Section title="Satellite corroboration">
+          {detections.length > 0 ? (
+            <div className="rounded-md border border-hairline bg-surface px-4 py-3">
+              <SatelliteStrip detections={detections} />
+            </div>
+          ) : (
+            <p className="text-sm text-muted">
+              No detections match the selected confidence level for this event.
+            </p>
+          )}
+          <p className="mt-2 text-xs text-muted">
+            One tick per detection, on the event's own time axis. Heat caught
+            independently by several instruments on different orbits is much
+            harder to dismiss as a sensor artifact.
+          </p>
+        </Section>
+
+        <Section title="Detection footprint">
+          {detections.length > 0 ? (
+            <FootprintMap
+              detections={detections}
+              center={{ lat: event.latitude, lon: event.longitude }}
+              facility={event.nearest_facility}
+            />
+          ) : (
+            <p className="text-sm text-muted">
+              No detections match the selected confidence level for this event.
+            </p>
+          )}
+          <p className="mt-2 text-xs text-muted">
+            Measured geometry only. A tight cluster suggests a point source
+            (stack, furnace); a spread-out line suggests a moving front. This
+            does not diagnose what caused the heat.
+          </p>
+        </Section>
+
+        <Section title="Detection character">
+          {detections.length > 0 ? (
+            <div className="rounded-md border border-hairline bg-surface px-4 py-3">
+              <DetectionCharacter detections={detections} />
+            </div>
+          ) : (
+            <p className="text-sm text-muted">
+              No detections match the selected confidence level for this event.
+            </p>
+          )}
+        </Section>
+
         <Section title="Analyst notes">
           <ul className="space-y-2.5 rounded-md border border-hairline bg-surface px-4 py-3">
             {notes.map((note, i) => (
@@ -270,6 +344,19 @@ export const EventDetail: React.FC = () => {
                 </DefRow>
                 <DefRow label="Facilities ≤ 1 km">{event.facilities_within_1km}</DefRow>
                 <DefRow label="Facilities ≤ 5 km">{event.facilities_within_5km}</DefRow>
+                <DefRow label="Surrounding land">
+                  {event.landuse_class && event.landuse_class !== 'unknown' ? (
+                    <>
+                      {landuseClassLabel(event.landuse_class)}
+                      {event.landuse_inside === false && event.landuse_distance_m != null && (
+                        <span className="text-faint"> · {fmtKm(event.landuse_distance_m)} away</span>
+                      )}
+                      <span className="text-faint"> (OSM)</span>
+                    </>
+                  ) : (
+                    <span className="text-faint">Not yet looked up</span>
+                  )}
+                </DefRow>
               </dl>
               {!isUnnamedFacility(event.nearest_facility.name, event.nearest_facility.type) && (
                 <Link
@@ -281,13 +368,48 @@ export const EventDetail: React.FC = () => {
               )}
             </div>
           ) : (
-            <p className="text-sm text-muted">
-              No mapped facility nearby in OpenStreetMap.
-            </p>
+            <>
+              <p className="text-sm text-muted">
+                No mapped facility nearby in OpenStreetMap.
+              </p>
+              {event.landuse_class && event.landuse_class !== 'unknown' && (
+                <p className="mt-2 text-sm text-muted">
+                  Surrounding land:{' '}
+                  <span className="font-medium text-ink">{landuseClassLabel(event.landuse_class)}</span>
+                  <span className="text-faint"> (OSM)</span>
+                </p>
+              )}
+            </>
           )}
           <div className="mt-3">
             <HonestyNote compact />
           </div>
+        </Section>
+
+        <Section title="Satellite imagery">
+          <div className="rounded-md border border-hairline bg-surface px-4 py-3">
+            <p className="text-sm leading-relaxed text-ink">
+              Sentinel-2 true color, around the first detection day — for
+              visual inspection of the site.
+            </p>
+            <a
+              href={eoBrowserUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-quiet mt-3 inline-flex items-center gap-1.5 rounded-sm bg-ink px-3 py-1.5 text-[13px] font-semibold text-white hover:bg-black"
+            >
+              Open in EO Browser →
+            </a>
+            <p className="mt-3 text-xs text-muted">
+              Imagery is context for the analyst's own eyes — it is not a
+              detection source and doesn't change any value on this page.
+            </p>
+          </div>
+          <dl className="mt-3 divide-y divide-hairline rounded-md border border-hairline bg-surface px-4">
+            <DefRow label="VIIRS Nightfire">
+              <span className="text-faint">No licensed data loaded</span>
+            </DefRow>
+          </dl>
         </Section>
 
         <Section title="Why this matters · rule-based assessment">

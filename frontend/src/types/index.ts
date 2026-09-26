@@ -15,6 +15,10 @@ export interface EventSummary {
   facility_distance_m: number | null;
   facilities_within_1km: number;
   facilities_within_5km: number;
+  landuse_class: string;
+  landuse_tag: string | null;
+  landuse_inside: boolean | null;
+  landuse_distance_m: number | null;
   confidence_counts?: { high: number; nominal: number; low: number };
 }
 
@@ -40,6 +44,8 @@ export interface EventDetection {
   brightness: number | null;
   daynight: string | null;
   confidence?: string | null;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface FacilitySummary {

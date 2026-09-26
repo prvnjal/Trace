@@ -38,9 +38,11 @@ log = logging.getLogger(__name__)
 
 BUFFER_DEG = 0.05   # ~5.5 km around each event centroid
 MAX_BOX_AREA_DEG2 = 0.25
-PAUSE_S = 1.0
+PAUSE_S = 2.0  # gentle gap between Overpass queries (raised 2026-09-26: public servers rate-limit aggressively)
 WORKERS = 4
-CACHE_DIR = Path("data/landuse_cache")
+# Script-relative so the service (backend/app/services/landuse.py) and the CLI
+# share one cache location regardless of the process working directory.
+CACHE_DIR = Path(__file__).resolve().parent / "data" / "landuse_cache"
 
 LANDUSE_VALUES = ("farmland|farmyard|orchard|plantation|allotments|meadow|"
                   "grass|forest|industrial|commercial|residential|retail|"

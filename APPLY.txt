@@ -1,0 +1,31 @@
+TRACE — Event dossier visualizations (from approved mockup)
+============================================================
+
+WHAT'S NEW (4 sections on the event dossier page)
+  1. Satellite corroboration — one row per instrument (VIIRS SNPP / VIIRS
+     NOAA-20 / MODIS), one tick per detection on the event's own time axis.
+  2. Detection footprint — detections plotted on satellite imagery around the
+     event centroid, with the mapped facility marker. Zoom is auto-fit.
+  3. Detection character — day/night split bar + confidence mix bars.
+  4. Satellite imagery — EO Browser deep link (Sentinel-2 true color, first
+     detection day, pre-set) + honest "VIIRS Nightfire: no licensed data
+     loaded" row.
+
+Backend change: /events/{code}/detections now also returns latitude and
+longitude per detection (powers the footprint map). Additive only.
+
+APPLY (on the laptop, in C:\Users\HP\downloads\thermal-intel-clean-code)
+  1. Extract this zip over the project folder (overwrite 6 files):
+       backend\app\main.py
+       frontend\src\types\index.ts
+       frontend\src\components\SatelliteStrip.tsx        (new)
+       frontend\src\components\DetectionCharacter.tsx   (new)
+       frontend\src\components\FootprintMap.tsx          (new)
+       frontend\src\pages\EventDetail.tsx
+  2. Rebuild the API (backend changed):
+       docker compose up --build -d
+  3. Frontend: if `npm run dev` is already running it hot-reloads by itself.
+     If not, start it:  cd frontend ; npm run dev
+  4. Open any event dossier and check the four new sections render. The
+     footprint map needs the rebuilt API (lat/lon fields); the other three
+     work with existing data.

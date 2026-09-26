@@ -1,0 +1,38 @@
+TRACE — Feature 1: OSM land-cover integration
+================================================
+Apply on: C:\Users\HP\Downloads\thermal-intel-clean-code
+
+WHAT THIS ADDS
+- Every thermal event gets an OSM land-use tag at its centroid:
+  farmland / forest / scrub-grass / industrial-urban / wetland / unknown,
+  plus whether the event is inside the polygon and its distance to the edge.
+- Tags are computed during refresh via cached Overpass queries
+  (backend/data/landuse_cache, persisted across rebuilds by a new volume).
+- Event codes are deterministic, so tags carry over across refreshes —
+  only genuinely new events trigger Overpass lookups.
+- Dossier shows "Surrounding land: Forest (OSM)"; Events table shows the
+  land class next to the facility info.
+
+STEPS (PowerShell, from the project folder)
+1. Back up first (the DB volume):
+     docker compose exec postgis pg_dump -U thermal -d thermal_intel > backup_landuse.sql
+2. Copy this zip's files over the project folder (same relative paths).
+3. Run the one-time migration (adds 4 columns; safe to re-run):
+     docker compose cp backend\database\migrations\002_landuse_columns.sql postgis:/tmp/002_landuse.sql
+     docker compose exec postgis psql -U thermal -d thermal_intel -f /tmp/002_landuse.sql
+   (If your postgres user/db differ, adjust -U/-d to match your .env.)
+4. Rebuild + restart:
+     docker compose up --build -d
+5. Trigger a refresh (UI "Refresh now" or POST /admin/refresh).
+   FIRST refresh takes several extra minutes: every existing event gets its
+   first Overpass lookup (cached afterwards). Events stay visible throughout
+   — land-use fills in after the commit, and any Overpass failure degrades
+   to "unknown" without failing the refresh.
+6. Verify: open any event dossier -> "Surrounding land" row; check the
+   Events table's industry column shows a land class suffix.
+7. Commit + push to GitHub when happy.
+
+ROLLBACK
+- If anything breaks: docker compose down, restore backup_landuse.sql into
+  postgres, git checkout the changed files, up again. The migration only
+  ADDS columns, so old code runs fine against the migrated DB.

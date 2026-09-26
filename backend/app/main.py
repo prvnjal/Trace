@@ -202,6 +202,10 @@ def event_summary(
         "facility_distance_m": ev.facility_distance_m,
         "facilities_within_1km": ev.facilities_within_1km,
         "facilities_within_5km": ev.facilities_within_5km,
+        "landuse_class": ev.landuse_class or "unknown",
+        "landuse_tag": ev.landuse_tag,
+        "landuse_inside": ev.landuse_inside,
+        "landuse_distance_m": ev.landuse_distance_m,
         "confidence_counts": confidence_counts,
     }
 
@@ -354,7 +358,8 @@ def event_detections(
 ) -> dict:
     """Per-detection time series for one event: timestamp + FRP per pass.
 
-    Powers the heat-over-time chart. Ordered oldest first.
+    Powers the heat-over-time chart, the satellite corroboration strip, the
+    detection-character panels and the footprint map. Ordered oldest first.
     """
     ev = db.query(ThermalEvent).filter(ThermalEvent.event_code == event_code).one_or_none()
     if not ev:
@@ -379,6 +384,8 @@ def event_detections(
                 "brightness": r.bright_ti4,
                 "daynight": r.daynight,
                 "confidence": normalize_confidence_bucket(r.confidence),
+                "latitude": r.latitude,
+                "longitude": r.longitude,
             }
             for r in rows
         ],
@@ -675,8 +682,13 @@ def _run_refresh(days: int | None) -> None:
 
     db = SessionLocal()
     try:
-        _refresh_state["detail"] = f"fetching {days}-day FIRMS window"
-        summary = refresh_from_firms(db, days=days)
+        # The stage label is updated by refresh_from_firms via this callback,
+        # so /admin/refresh/status reflects the real phase (fetch / cluster /
+        # land-cover tagging) instead of freezing on the first line.
+        def _progress(label: str) -> None:
+            _refresh_state["detail"] = label
+
+        summary = refresh_from_firms(db, days=days, progress=_progress)
         _refresh_state["state"] = "done"
         _refresh_state["detail"] = None
         _refresh_state["summary"] = summary

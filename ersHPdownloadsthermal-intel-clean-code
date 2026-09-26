@@ -1,0 +1,23 @@
+warning: in the working copy of 'backend/app/main.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/models.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/app/services/refresh.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/database/schema.sql', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/osm_landuse_extract.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'backend/targeted_osm_extract.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docker-compose.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/EventDetail.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/Events.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/types/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/utils/format.ts', LF will be replaced by CRLF the next time Git touches it
+ backend/app/main.py                |  18 [32m++++[m[31m-[m
+ backend/app/models.py              |  11 [32m++++[m
+ backend/app/services/refresh.py    |  80 [32m+++++++++++++++++++++[m[31m-[m
+ backend/database/schema.sql        |   5 [32m++[m
+ backend/osm_landuse_extract.py     |   6 [32m+[m[31m-[m
+ backend/targeted_osm_extract.py    |  21 [32m+++++[m[31m-[m
+ docker-compose.yml                 |   4 [32m++[m
+ frontend/src/pages/EventDetail.tsx | 132 [32m+++++++++++++++++++++++++++++++++++[m[31m--[m
+ frontend/src/pages/Events.tsx      |   5 [32m+[m[31m-[m
+ frontend/src/types/index.ts        |   6 [32m++[m
+ frontend/src/utils/format.ts       |  19 [32m+++++[m[31m-[m
+ 11 files changed, 291 insertions(+), 16 deletions(-)

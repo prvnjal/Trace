@@ -6,7 +6,7 @@ import { PageHeader, EmptyState, ErrorState, SkeletonRows } from '../components/
 import { RiskBadge } from '../components/RiskBadge';
 import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { RISK_META, RISK_TIERS, RiskTier } from '../utils/risk';
-import { displayFacilityName, fmtDate, fmtKm, formatConfidenceNote, satLabel } from '../utils/format';
+import { displayFacilityName, fmtDate, fmtKm, formatConfidenceNote, landuseClassLabel, satLabel } from '../utils/format';
 
 type SortKey = 'tier' | 'detections' | 'frp' | 'recent';
 
@@ -282,6 +282,9 @@ export const Events: React.FC = () => {
                             {displayFacilityName(e.nearest_facility_name, e.nearest_facility_type)}
                           </span>
                           <span className="text-faint"> · {fmtKm(e.facility_distance_m)}</span>
+                          {e.landuse_class && e.landuse_class !== 'unknown' && (
+                            <span className="text-faint"> · {landuseClassLabel(e.landuse_class)}</span>
+                          )}
                         </>
                       ) : (
                         '—'

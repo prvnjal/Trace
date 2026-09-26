@@ -41,6 +41,11 @@ CREATE TABLE IF NOT EXISTS thermal_events (
     satellites TEXT[] NOT NULL DEFAULT '{}',
     -- industrial / land-use context (populated by later enrichment stages)
     nearest_facility_id INTEGER REFERENCES industrial_facilities (id),
+    landuse_class VARCHAR(30) NOT NULL DEFAULT 'unknown',
+    landuse_tag VARCHAR(60),
+    landuse_inside BOOLEAN,
+    landuse_distance_m DOUBLE PRECISION,
+    landuse_verified BOOLEAN,
     facility_distance_m DOUBLE PRECISION,
     facilities_within_1km INTEGER NOT NULL DEFAULT 0,
     facilities_within_5km INTEGER NOT NULL DEFAULT 0,
