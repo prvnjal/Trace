@@ -30,12 +30,14 @@ interface TraceData {
   stats: SystemStatistics | null;
   /** Exact "updated from FIRMS" timestamp + last refresh summary. */
   dataStatus: DataStatus | null;
-  /** All thermal events (708) — one request, limit 1000. */
+  /** All thermal events — one request, limit 1000. */
   events: EventSummary[];
   /** All industrial facilities (14,963) — paged once, then client-side. */
   facilities: FacilitySummary[];
   riskByCode: Map<string, RiskAssessment>;
   tierCounts: Record<RiskTier, number>;
+  confidenceFilter: string[];
+  setConfidenceFilter: (conf: string[]) => void;
   reload: () => void;
   /** Trigger a FIRMS refresh now; polls until done, then reloads. */
   refreshNow: () => Promise<void>;
@@ -65,11 +67,12 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
   const [dataStatus, setDataStatus] = useState<DataStatus | null>(null);
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
+  const [confidenceFilter, setConfidenceFilterState] = useState<string[]>(['high', 'nominal', 'low']);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string | null>(null);
   const [refreshJob, setRefreshJob] = useState<RefreshJobStatus | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (confFilter = confidenceFilter) => {
     setLoading(true);
     setError(null);
     try {
@@ -77,7 +80,7 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchHealth(),
         fetchStatistics(),
         fetchDataStatus(),
-        fetchEvents(BASE_FILTERS, 1000, 0),
+        fetchEvents({ ...BASE_FILTERS, confidence: confFilter }, 1000, 0),
         fetchAllFacilities(),
       ]);
       setHealthy(ok);
@@ -100,6 +103,16 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
       );
     } finally {
       setLoading(false);
+    }
+  }, [confidenceFilter]);
+
+  const setConfidenceFilter = useCallback(async (nextConf: string[]) => {
+    setConfidenceFilterState(nextConf);
+    try {
+      const evRes = await fetchEvents({ ...BASE_FILTERS, confidence: nextConf }, 1000, 0);
+      setEvents(evRes.events || []);
+    } catch (e) {
+      console.error('Failed to update events with confidence filter:', e);
     }
   }, []);
 
@@ -136,7 +149,7 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     load();
-  }, [load]);
+  }, []);
 
   const riskByCode = useMemo(() => {
     const m = new Map<string, RiskAssessment>();
@@ -168,6 +181,8 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
     facilities,
     riskByCode,
     tierCounts,
+    confidenceFilter,
+    setConfidenceFilter,
     reload: load,
     refreshNow,
     refreshing,

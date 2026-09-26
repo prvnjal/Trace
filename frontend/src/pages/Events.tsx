@@ -4,8 +4,9 @@ import { Search } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
 import { PageHeader, EmptyState, ErrorState, SkeletonRows } from '../components/ui';
 import { RiskBadge } from '../components/RiskBadge';
+import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { RISK_META, RISK_TIERS, RiskTier } from '../utils/risk';
-import { displayFacilityName, fmtDate, fmtKm, satLabel } from '../utils/format';
+import { displayFacilityName, fmtDate, fmtKm, formatConfidenceNote, satLabel } from '../utils/format';
 
 type SortKey = 'tier' | 'detections' | 'frp' | 'recent';
 
@@ -21,7 +22,7 @@ const SATELLITES = ['VIIRS_SNPP_NRT', 'VIIRS_NOAA20_NRT', 'MODIS_NRT'];
 const PAGE_SIZE = 50;
 
 export const Events: React.FC = () => {
-  const { events, riskByCode, loading, error, reload } = useTraceData();
+  const { events, riskByCode, confidenceFilter, setConfidenceFilter, loading, error, reload } = useTraceData();
   const [query, setQuery] = useState('');
   const [tier, setTier] = useState<RiskTier | ''>('');
   const [satellite, setSatellite] = useState('');
@@ -119,16 +120,23 @@ export const Events: React.FC = () => {
             setTier(e.target.value as RiskTier | '');
             setPage(0);
           }}
-          aria-label="Filter by tier"
+          aria-label="Filter by attention tier"
           className="rounded-sm border border-hairline bg-surface px-2.5 py-2 text-[13px] text-ink"
         >
-          <option value="">All tiers</option>
+          <option value="">All attention tiers</option>
           {RISK_TIERS.map((t) => (
             <option key={t} value={t}>
               {t}
             </option>
           ))}
         </select>
+        <ConfidenceFilter
+          value={confidenceFilter}
+          onChange={(c) => {
+            setConfidenceFilter(c);
+            setPage(0);
+          }}
+        />
         <select
           value={satellite}
           onChange={(e) => {
@@ -206,6 +214,7 @@ export const Events: React.FC = () => {
                 setSatellite('');
                 setMinDetections(1);
                 setNearIndustry(false);
+                setConfidenceFilter(['high', 'nominal', 'low']);
                 setPage(0);
               }}
               className="transition-quiet rounded-sm border border-hairline bg-surface px-3 py-1.5 text-[13px] font-medium text-ink hover:border-pine"
@@ -235,6 +244,7 @@ export const Events: React.FC = () => {
             <tbody className="divide-y divide-hairline">
               {pageRows.map((e) => {
                 const risk = riskByCode.get(e.event_code);
+                const confNote = formatConfidenceNote(e.confidence_counts);
                 return (
                   <tr key={e.event_code} className="transition-quiet hover:bg-wash/50">
                     <td className="px-3 py-2.5">
@@ -254,7 +264,14 @@ export const Events: React.FC = () => {
                     <td className="px-3 py-2.5 text-muted whitespace-nowrap">
                       {fmtDate(e.last_detected)}
                     </td>
-                    <td className="px-3 py-2.5 font-semibold tabular-nums">{e.detection_count}</td>
+                    <td className="px-3 py-2.5 tabular-nums">
+                      <span className="font-semibold">{e.detection_count}</span>
+                      {confNote && (
+                        <div className="text-[11px] text-faint whitespace-nowrap">
+                          {confNote}
+                        </div>
+                      )}
+                    </td>
                     <td className="px-3 py-2.5 tabular-nums text-ember-deep font-medium">
                       {e.max_frp != null ? `${e.max_frp.toFixed(1)} MW` : '—'}
                     </td>

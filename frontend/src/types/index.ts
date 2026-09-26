@@ -15,6 +15,7 @@ export interface EventSummary {
   facility_distance_m: number | null;
   facilities_within_1km: number;
   facilities_within_5km: number;
+  confidence_counts?: { high: number; nominal: number; low: number };
 }
 
 export interface FacilityDetail {
@@ -38,6 +39,7 @@ export interface EventDetection {
   satellite: string | null;
   brightness: number | null;
   daynight: string | null;
+  confidence?: string | null;
 }
 
 export interface FacilitySummary {
@@ -65,4 +67,5 @@ export interface EventFilters {
   satellite: string;
   near_facility: boolean;
   sort: 'detections' | 'frp' | 'recent';
+  confidence?: string[];
 }

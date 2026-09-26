@@ -57,12 +57,12 @@ const createEventIcon = (color: string, isSelected: boolean, dark: boolean) => {
 
 const facilityIcon = (dark: boolean) =>
   L.divIcon({
-    html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11"><rect x="6" y="6" width="12" height="12" rx="2" fill="${
+    html: `<div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="11" height="11"><rect x="6" y="6" width="12" height="12" rx="2" fill="${
       dark ? '#7FA08C' : '#1D4A38'
-    }" stroke="${dark ? '#FAFAF7' : '#FFFFFF'}" stroke-width="2"/></svg>`,
+    }" stroke="${dark ? '#FAFAF7' : '#FFFFFF'}" stroke-width="2"/></svg></div>`,
     className: 'facility-marker',
-    iconSize: [11, 11],
-    iconAnchor: [5.5, 5.5],
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
   });
 
 const clusterIcon = (count: number) =>
@@ -176,6 +176,7 @@ const FacilityClusters: React.FC<{ clusters: FacilityClusterItem[]; dark: boolea
             key={`f-${f?.id ?? i}-${c.latitude}-${c.longitude}`}
             position={[c.latitude, c.longitude]}
             icon={facilityIcon(dark)}
+            riseOnHover={true}
           >
             {f && (
               <Popup>

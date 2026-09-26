@@ -49,6 +49,9 @@ export const fetchEvents = async (
   };
   if (filters.satellite) params.satellite = filters.satellite;
   if (filters.near_facility) params.near_facility_km = 5;
+  if (filters.confidence && filters.confidence.length > 0) {
+    params.confidence = filters.confidence.join(',');
+  }
   const res = await api.get('/events', { params });
   return res.data;
 };
@@ -59,9 +62,14 @@ export const fetchEventDetail = async (eventCode: string): Promise<EventDetail> 
 };
 
 export const fetchEventDetections = async (
-  eventCode: string
+  eventCode: string,
+  confidence?: string[]
 ): Promise<EventDetection[]> => {
-  const res = await api.get(`/events/${encodeURIComponent(eventCode)}/detections`);
+  const params: Record<string, string> = {};
+  if (confidence && confidence.length > 0) {
+    params.confidence = confidence.join(',');
+  }
+  const res = await api.get(`/events/${encodeURIComponent(eventCode)}/detections`, { params });
   return res.data.detections || [];
 };
 

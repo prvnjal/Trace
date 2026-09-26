@@ -4,10 +4,11 @@ import { ArrowRight, SlidersHorizontal, X } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
 import { ThermalMapView } from '../components/ThermalMapView';
 import { RiskBadge, RiskReasons } from '../components/RiskBadge';
+import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { HonestyNote } from '../components/Term';
 import { EmptyState, ErrorState } from '../components/ui';
 import { RISK_TIERS, RiskTier } from '../utils/risk';
-import { displayFacilityName, fmtDateTime, fmtKm, satLabel } from '../utils/format';
+import { displayFacilityName, fmtDateTime, fmtKm, formatConfidenceNote, satLabel } from '../utils/format';
 
 const SATELLITES = ['VIIRS_SNPP_NRT', 'VIIRS_NOAA20_NRT', 'MODIS_NRT'];
 
@@ -34,7 +35,9 @@ const FilterDrawer: React.FC<{
   onChange: (f: MapFilters) => void;
   onClose: () => void;
   resultCount: number;
-}> = ({ filters, onChange, onClose, resultCount }) => {
+  confidenceFilter: string[];
+  setConfidenceFilter: (conf: string[]) => void;
+}> = ({ filters, onChange, onClose, resultCount, confidenceFilter, setConfidenceFilter }) => {
   const set = (patch: Partial<MapFilters>) => onChange({ ...filters, ...patch });
   const toggleTier = (t: RiskTier) => {
     const next = new Set(filters.tiers);
@@ -82,6 +85,11 @@ const FilterDrawer: React.FC<{
             ))}
           </div>
         </fieldset>
+
+        <div>
+          <label className="micro-label mb-2 block">Confidence</label>
+          <ConfidenceFilter value={confidenceFilter} onChange={setConfidenceFilter} className="w-full" />
+        </div>
 
         <div>
           <label htmlFor="map-sat" className="micro-label mb-2 block">
@@ -174,7 +182,10 @@ const FilterDrawer: React.FC<{
         <p className="text-xs text-muted tabular-nums">{resultCount} events</p>
         <button
           type="button"
-          onClick={() => onChange(DEFAULT_FILTERS)}
+          onClick={() => {
+            onChange(DEFAULT_FILTERS);
+            setConfidenceFilter(['high', 'nominal', 'low']);
+          }}
           className="transition-quiet text-xs font-medium text-pine-deep hover:text-pine"
         >
           Reset
@@ -185,7 +196,7 @@ const FilterDrawer: React.FC<{
 };
 
 export const LiveMap: React.FC = () => {
-  const { events, riskByCode, loading, error, reload } = useTraceData();
+  const { events, riskByCode, confidenceFilter, setConfidenceFilter, loading, error, reload } = useTraceData();
   const [searchParams] = useSearchParams();
   const focusCode = searchParams.get('event');
 
@@ -265,6 +276,8 @@ export const LiveMap: React.FC = () => {
           onChange={setFilters}
           onClose={() => setDrawerOpen(false)}
           resultCount={filtered.length}
+          confidenceFilter={confidenceFilter}
+          setConfidenceFilter={setConfidenceFilter}
         />
       )}
 
@@ -318,7 +331,14 @@ export const LiveMap: React.FC = () => {
               </div>
               <div className="flex justify-between gap-3">
                 <dt className="text-[#9AA39C]">Detections</dt>
-                <dd className="tabular-nums font-semibold">{selected.detection_count}</dd>
+                <dd className="tabular-nums text-right">
+                  <span className="font-semibold">{selected.detection_count}</span>
+                  {formatConfidenceNote(selected.confidence_counts) && (
+                    <span className="block text-[11px] text-[#9AA39C]">
+                      {formatConfidenceNote(selected.confidence_counts)}
+                    </span>
+                  )}
+                </dd>
               </div>
               {selected.max_frp != null && (
                 <div className="flex justify-between gap-3">

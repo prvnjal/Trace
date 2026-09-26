@@ -85,7 +85,100 @@ app.add_middleware(
 )
 
 
-def event_summary(ev: ThermalEvent, facility: Facility | None) -> dict:
+def normalize_confidence_bucket(val: str | None) -> str:
+    """Map confidence value to canonical bucket ('high', 'nominal', 'low')."""
+    if not val:
+        return "low"
+    c = str(val).strip().lower()
+    if c in ("h", "high"):
+        return "high"
+    if c in ("n", "nominal"):
+        return "nominal"
+    if c in ("l", "low"):
+        return "low"
+    return "low"
+
+
+def parse_confidence_param(confidence: list[str] | str | None) -> set[str]:
+    """Parse raw query parameter into a set of normalized bucket names ('high', 'nominal', 'low')."""
+    if not confidence:
+        return set()
+    if isinstance(confidence, str):
+        raw_items = confidence.split(",")
+    else:
+        raw_items = []
+        for item in confidence:
+            raw_items.extend(item.split(","))
+
+    parsed = set()
+    for item in raw_items:
+        c = item.strip().lower()
+        if c in ("h", "high"):
+            parsed.add("high")
+        elif c in ("n", "nominal"):
+            parsed.add("nominal")
+        elif c in ("l", "low"):
+            parsed.add("low")
+        elif c:
+            parsed.add("low")
+    return parsed
+
+
+def get_confidence_sql_filter(selected_set: set[str]):
+    """Returns SQLAlchemy condition for ThermalDetection.confidence matching selected_set."""
+    if not selected_set or selected_set == {"high", "nominal", "low"}:
+        return None
+
+    has_high = "high" in selected_set
+    has_nominal = "nominal" in selected_set
+    has_low = "low" in selected_set
+
+    if has_high and has_nominal and has_low:
+        return None
+
+    high_db_vals = ["high", "h"]
+    nominal_db_vals = ["nominal", "n"]
+
+    if has_high and has_nominal:
+        return ThermalDetection.confidence.in_(high_db_vals + nominal_db_vals)
+    elif has_high and has_low:
+        return ~ThermalDetection.confidence.in_(nominal_db_vals)
+    elif has_nominal and has_low:
+        return ~ThermalDetection.confidence.in_(high_db_vals)
+    elif has_high:
+        return ThermalDetection.confidence.in_(high_db_vals)
+    elif has_nominal:
+        return ThermalDetection.confidence.in_(nominal_db_vals)
+    elif has_low:
+        return ~ThermalDetection.confidence.in_(high_db_vals + nominal_db_vals)
+
+    return None
+
+
+def get_confidence_counts_by_event(db: Session, event_ids: list[int]) -> dict[int, dict[str, int]]:
+    counts: dict[int, dict[str, int]] = {eid: {"high": 0, "nominal": 0, "low": 0} for eid in event_ids}
+    if not event_ids:
+        return counts
+    rows = (
+        db.query(ThermalDetection.event_id, ThermalDetection.confidence, func.count(ThermalDetection.id))
+        .filter(ThermalDetection.event_id.in_(event_ids))
+        .group_by(ThermalDetection.event_id, ThermalDetection.confidence)
+        .all()
+    )
+    for ev_id, conf_val, cnt in rows:
+        if ev_id in counts:
+            bucket = normalize_confidence_bucket(conf_val)
+            counts[ev_id][bucket] += cnt
+    return counts
+
+
+def event_summary(
+    ev: ThermalEvent,
+    facility: Facility | None,
+    confidence_counts: dict[str, int] | None = None,
+) -> dict:
+    if confidence_counts is None:
+        confidence_counts = {"high": 0, "nominal": 0, "low": 0}
     return {
         "event_code": ev.event_code,
         "latitude": ev.centroid_lat,
@@ -103,6 +196,7 @@ def event_summary(ev: ThermalEvent, facility: Facility | None) -> dict:
         "facility_distance_m": ev.facility_distance_m,
         "facilities_within_1km": ev.facilities_within_1km,
         "facilities_within_5km": ev.facilities_within_5km,
+        "confidence_counts": confidence_counts,
     }
 
 
@@ -157,6 +251,7 @@ def list_events(
     max_lon: float | None = Query(None),
     max_lat: float | None = Query(None),
     near_facility_km: float | None = Query(None, description="only events this close to a facility"),
+    confidence: list[str] | None = Query(None, description="confidence levels e.g. high,nominal or h,n"),
     sort: Literal["detections", "frp", "recent"] = Query("detections"),
     limit: int = Query(200, ge=1, le=1000),
     offset: int = Query(0, ge=0),
@@ -178,6 +273,12 @@ def list_events(
     if near_facility_km is not None:
         q = q.filter(ThermalEvent.facility_distance_m <= near_facility_km * 1000)
 
+    selected_conf = parse_confidence_param(confidence)
+    conf_filter = get_confidence_sql_filter(selected_conf)
+    if conf_filter is not None:
+        subq = db.query(ThermalDetection.event_id).filter(conf_filter).distinct()
+        q = q.filter(ThermalEvent.id.in_(subq))
+
     total = q.count()
     order = {
         "detections": ThermalEvent.detection_count.desc(),
@@ -192,11 +293,18 @@ def list_events(
         if fac_ids
         else {}
     )
+
+    ev_ids = [e.id for e in events]
+    conf_counts = get_confidence_counts_by_event(db, ev_ids)
+
     return {
         "total": total,
         "limit": limit,
         "offset": offset,
-        "events": [event_summary(e, fac_map.get(e.nearest_facility_id)) for e in events],
+        "events": [
+            event_summary(e, fac_map.get(e.nearest_facility_id), conf_counts.get(e.id))
+            for e in events
+        ],
     }
 
 
@@ -210,7 +318,8 @@ def event_detail(event_code: str, db: Session = Depends(get_db)) -> dict:
         if ev.nearest_facility_id
         else None
     )
-    detail = event_summary(ev, facility)
+    conf_counts = get_confidence_counts_by_event(db, [ev.id]).get(ev.id)
+    detail = event_summary(ev, facility, conf_counts)
     detail.update(
         {
             "max_brightness": ev.max_brightness,
@@ -232,7 +341,11 @@ def event_detail(event_code: str, db: Session = Depends(get_db)) -> dict:
 
 
 @app.get("/events/{event_code}/detections")
-def event_detections(event_code: str, db: Session = Depends(get_db)) -> dict:
+def event_detections(
+    event_code: str,
+    confidence: list[str] | None = Query(None),
+    db: Session = Depends(get_db),
+) -> dict:
     """Per-detection time series for one event: timestamp + FRP per pass.
 
     Powers the heat-over-time chart. Ordered oldest first.
@@ -240,12 +353,15 @@ def event_detections(event_code: str, db: Session = Depends(get_db)) -> dict:
     ev = db.query(ThermalEvent).filter(ThermalEvent.event_code == event_code).one_or_none()
     if not ev:
         raise HTTPException(status_code=404, detail="event not found")
-    rows = (
-        db.query(ThermalDetection)
-        .filter(ThermalDetection.event_id == ev.id)
-        .order_by(ThermalDetection.detection_timestamp.asc())
-        .all()
-    )
+    
+    q = db.query(ThermalDetection).filter(ThermalDetection.event_id == ev.id)
+    
+    selected_conf = parse_confidence_param(confidence)
+    conf_filter = get_confidence_sql_filter(selected_conf)
+    if conf_filter is not None:
+        q = q.filter(conf_filter)
+
+    rows = q.order_by(ThermalDetection.detection_timestamp.asc()).all()
     return {
         "event_code": event_code,
         "count": len(rows),
@@ -256,6 +372,7 @@ def event_detections(event_code: str, db: Session = Depends(get_db)) -> dict:
                 "satellite": r.satellite,
                 "brightness": r.bright_ti4,
                 "daynight": r.daynight,
+                "confidence": normalize_confidence_bucket(r.confidence),
             }
             for r in rows
         ],

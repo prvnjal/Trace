@@ -6,6 +6,7 @@ import type { EventDetail as EventDetailType, EventDetection } from '../types';
 import { useTraceData } from '../data/TraceDataContext';
 import { PageHeader, Section, DefRow, EmptyState, Skeleton } from '../components/ui';
 import { RiskBadge, RiskReasons } from '../components/RiskBadge';
+import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { TimelineChart } from '../components/TimelineChart';
 import { Term, GLOSSARY, HonestyNote } from '../components/Term';
 import { assessRisk } from '../utils/risk';
@@ -16,6 +17,7 @@ import {
   fmtDateTime,
   fmtKm,
   facilityTypeLabel,
+  formatConfidenceNote,
   isUnnamedFacility,
   satLabel,
 } from '../utils/format';
@@ -24,7 +26,7 @@ import {
 export const EventDetail: React.FC = () => {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const { riskByCode, stats } = useTraceData();
+  const { riskByCode, confidenceFilter, setConfidenceFilter, stats } = useTraceData();
   const [event, setEvent] = useState<EventDetailType | null>(null);
   const [detections, setDetections] = useState<EventDetection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export const EventDetail: React.FC = () => {
       try {
         const [detail, dets] = await Promise.all([
           fetchEventDetail(code),
-          fetchEventDetections(code).catch(() => [] as EventDetection[]),
+          fetchEventDetections(code, confidenceFilter).catch(() => [] as EventDetection[]),
         ]);
         if (!cancelled) {
           setEvent(detail);
@@ -57,7 +59,7 @@ export const EventDetail: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [code]);
+  }, [code, confidenceFilter]);
 
   if (loading) {
     return (
@@ -99,7 +101,8 @@ export const EventDetail: React.FC = () => {
       : event.detection_count;
   const notes = analystNotes(event, detections);
 
-  const toggleFlag = () => {    if (flagged) {
+  const toggleFlag = () => {
+    if (flagged) {
       removeFlag(event.event_code);
       setFlagged(false);
     } else {
@@ -107,6 +110,8 @@ export const EventDetail: React.FC = () => {
       setFlagged(true);
     }
   };
+
+  const confNote = formatConfidenceNote(event.confidence_counts);
 
   return (
     <div className="max-w-3xl">
@@ -163,7 +168,12 @@ export const EventDetail: React.FC = () => {
       <div className="space-y-8">
         <Section title="Thermal activity">
           <dl className="divide-y divide-hairline rounded-md border border-hairline bg-surface px-4">
-            <DefRow label="Detections">{event.detection_count}</DefRow>
+            <DefRow label="Detections">
+              <span>{event.detection_count}</span>
+              {confNote && (
+                <span className="ml-2 text-xs font-normal text-muted">({confNote})</span>
+              )}
+            </DefRow>
             <DefRow label="Max FRP">
               <span className="text-ember-deep">
                 {event.max_frp != null ? `${event.max_frp.toFixed(1)} MW` : '—'}
@@ -193,14 +203,17 @@ export const EventDetail: React.FC = () => {
           </p>
         </Section>
 
-        <Section title="Heat over time">
+        <Section
+          title="Heat over time"
+          action={<ConfidenceFilter value={confidenceFilter} onChange={setConfidenceFilter} align="right" />}
+        >
           {detections.length > 0 ? (
             <div className="rounded-md border border-hairline bg-surface px-4 py-3">
               <TimelineChart detections={detections} />
             </div>
           ) : (
             <p className="text-sm text-muted">
-              Per-pass readings are still loading.
+              No detections match the selected confidence level for this event.
             </p>
           )}
         </Section>

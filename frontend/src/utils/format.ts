@@ -94,3 +94,15 @@ export function haversineKm(
       Math.sin(dLon / 2);
   return 2 * R * Math.asin(Math.sqrt(a));
 }
+
+/** Small muted note from confidence_counts, e.g. "12 high-conf.". Omitted when event has no low/nominal detections. */
+export function formatConfidenceNote(counts?: { high: number; nominal: number; low: number }): string | null {
+  if (!counts) return null;
+  const high = counts.high || 0;
+  const nominal = counts.nominal || 0;
+  const low = counts.low || 0;
+  const total = high + nominal + low;
+  if (total === 0) return null;
+  if (nominal === 0 && low === 0) return null;
+  return `${high} high-conf.`;
+}
