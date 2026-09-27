@@ -225,3 +225,28 @@ export const fetchAllFacilities = async (): Promise<FacilitySummary[]> => {
   }
   return all;
 };
+
+export interface MlPrediction {
+  event_code: string;
+  predicted_label: string;
+  confidence: number | null;
+  model_version: string;
+  predicted_at: string | null;
+}
+
+/**
+ * Every scored model prediction (compact: top confidence only, no per-class
+ * vectors). Fetched once per page load and shared via useMlPredictions.
+ * Resolves to [] when predictions were never loaded into the database
+ * (ml_poc/predict.py --to-db not run yet) — callers degrade quietly.
+ */
+let mlPredictionsCache: Promise<MlPrediction[]> | null = null;
+export const fetchMlPredictions = (): Promise<MlPrediction[]> => {
+  if (!mlPredictionsCache) {
+    mlPredictionsCache = api
+      .get('/ml-predictions')
+      .then((res) => (res.data?.predictions ?? []) as MlPrediction[])
+      .catch(() => []);
+  }
+  return mlPredictionsCache;
+};

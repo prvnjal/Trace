@@ -4,6 +4,9 @@ import { Search } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
 import { PageHeader, EmptyState, ErrorState, SkeletonRows } from '../components/ui';
 import { RiskBadge } from '../components/RiskBadge';
+import { ModelBadge } from '../components/ModelBadge';
+import { useMlPredictions } from '../hooks/useMlPredictions';
+import { ML_CLASS_ORDER, mlClassLabel } from '../utils/ml';
 import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { RISK_META, RISK_TIERS, RiskTier } from '../utils/risk';
 import { displayFacilityName, fmtDate, fmtKm, formatConfidenceNote, landuseClassLabel, satLabel } from '../utils/format';
@@ -23,8 +26,10 @@ const PAGE_SIZE = 50;
 
 export const Events: React.FC = () => {
   const { events, riskByCode, confidenceFilter, setConfidenceFilter, loading, error, reload } = useTraceData();
+  const { byCode: mlByCode } = useMlPredictions();
   const [query, setQuery] = useState('');
   const [tier, setTier] = useState<RiskTier | ''>('');
+  const [mlClass, setMlClass] = useState('');
   const [satellite, setSatellite] = useState('');
   const [minDetections, setMinDetections] = useState(1);
   const [nearIndustry, setNearIndustry] = useState(false);
@@ -36,6 +41,10 @@ export const Events: React.FC = () => {
     const rows = events.filter((e) => {
       const risk = riskByCode.get(e.event_code);
       if (tier && risk?.tier !== tier) return false;
+      if (mlClass) {
+        const p = mlByCode.get(e.event_code);
+        if (!p || p.predicted_label !== mlClass) return false;
+      }
       if (satellite && !e.satellites.includes(satellite)) return false;
       if (e.detection_count < minDetections) return false;
       if (nearIndustry && !(e.facility_distance_m != null && e.facility_distance_m <= 5000))
@@ -70,7 +79,7 @@ export const Events: React.FC = () => {
       }
     });
     return rows;
-  }, [events, riskByCode, query, tier, satellite, minDetections, nearIndustry, sort]);
+  }, [events, riskByCode, query, tier, mlClass, mlByCode, satellite, minDetections, nearIndustry, sort]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
@@ -127,6 +136,22 @@ export const Events: React.FC = () => {
           {RISK_TIERS.map((t) => (
             <option key={t} value={t}>
               {t}
+            </option>
+          ))}
+        </select>
+        <select
+          value={mlClass}
+          onChange={(e) => {
+            setMlClass(e.target.value);
+            setPage(0);
+          }}
+          aria-label="Filter by model assessment"
+          className="rounded-sm border border-hairline bg-surface px-2.5 py-2 text-[13px] text-ink"
+        >
+          <option value="">All model classes</option>
+          {ML_CLASS_ORDER.map((c) => (
+            <option key={c} value={c}>
+              {mlClassLabel(c)}
             </option>
           ))}
         </select>
@@ -211,6 +236,7 @@ export const Events: React.FC = () => {
               onClick={() => {
                 setQuery('');
                 setTier('');
+                setMlClass('');
                 setSatellite('');
                 setMinDetections(1);
                 setNearIndustry(false);
@@ -228,7 +254,7 @@ export const Events: React.FC = () => {
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-hairline bg-wash/50">
-                {['Event', 'Attention', 'Location', 'Detected', 'Detections', 'Max FRP', 'Nearest industry'].map(
+                {['Event', 'Attention', 'Model', 'Location', 'Detected', 'Detections', 'Max FRP', 'Nearest industry'].map(
                   (h) => (
                     <th
                       key={h}
@@ -257,6 +283,16 @@ export const Events: React.FC = () => {
                     </td>
                     <td className="px-3 py-2.5">
                       {risk && <RiskBadge assessment={risk} />}
+                    </td>
+                    <td className="px-3 py-2.5">
+                      {(() => {
+                        const p = mlByCode.get(e.event_code);
+                        return p ? (
+                          <ModelBadge prediction={p} />
+                        ) : (
+                          <span className="text-faint">—</span>
+                        );
+                      })()}
                     </td>
                     <td className="px-3 py-2.5 font-mono text-xs text-muted tabular-nums whitespace-nowrap">
                       {e.latitude.toFixed(3)}, {e.longitude.toFixed(3)}

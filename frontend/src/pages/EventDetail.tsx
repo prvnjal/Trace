@@ -6,6 +6,8 @@ import type { EventDetail as EventDetailType, EventDetection } from '../types';
 import { useTraceData } from '../data/TraceDataContext';
 import { PageHeader, Section, DefRow, EmptyState, Skeleton } from '../components/ui';
 import { RiskBadge, RiskReasons } from '../components/RiskBadge';
+import { ModelAssessment } from '../components/ModelAssessment';
+import { useMlPredictions } from '../hooks/useMlPredictions';
 import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { TimelineChart } from '../components/TimelineChart';
 import { SatelliteStrip } from '../components/SatelliteStrip';
@@ -31,6 +33,7 @@ export const EventDetail: React.FC = () => {
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const { confidenceFilter, setConfidenceFilter, stats } = useTraceData();
+  const { byCode: mlByCode, loading: mlLoading } = useMlPredictions();
   const [event, setEvent] = useState<EventDetailType | null>(null);
   const [detections, setDetections] = useState<EventDetection[]>([]);
   const [loading, setLoading] = useState(true);
@@ -190,6 +193,12 @@ export const EventDetail: React.FC = () => {
       <div className="mb-6">
         <RiskBadge assessment={assessment} size="md" />
       </div>
+
+      {!mlLoading && mlByCode.size > 0 && (
+        <div className="mb-8">
+          <ModelAssessment prediction={mlByCode.get(event.event_code) ?? null} />
+        </div>
+      )}
 
       <div className="space-y-8">
         <Section title="Thermal activity">

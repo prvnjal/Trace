@@ -1,0 +1,41 @@
+{
+  "model_version": "ml-poc-1",
+  "flavor": "xgboost",
+  "n_train": 141,
+  "n_weak_total": 177,
+  "n_excluded_human_labeled": 36,
+  "train_label_dist": {
+    "ROUTINE_FLARE": 0,
+    "PERSISTENT_THERMAL_SOURCE": 37,
+    "CANDIDATE_INDUSTRIAL_FIRE": 27,
+    "LIKELY_WILDFIRE": 8,
+    "LIKELY_AG_BURNING": 69
+  },
+  "classes_trained": [
+    "PERSISTENT_THERMAL_SOURCE",
+    "CANDIDATE_INDUSTRIAL_FIRE",
+    "LIKELY_WILDFIRE",
+    "LIKELY_AG_BURNING"
+  ],
+  "classes_missing": [
+    "ROUTINE_FLARE"
+  ],
+  "feature_cols": [
+    "days",
+    "detections",
+    "n_satellites",
+    "max_frp",
+    "mean_frp",
+    "frp_ratio",
+    "day_dets",
+    "night_dets",
+    "night_frac",
+    "det_per_day",
+    "facility_dist_km",
+    "facilities_1km",
+    "lu_farmland",
+    "lu_forest",
+    "lu_industrial_urban",
+    "lu_scrub_grass"
+  ]
+}

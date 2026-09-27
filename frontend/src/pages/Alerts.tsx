@@ -4,6 +4,8 @@ import { Check, Trash2 } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
 import { PageHeader, EmptyState } from '../components/ui';
 import { RiskBadge } from '../components/RiskBadge';
+import { ModelBadge } from '../components/ModelBadge';
+import { useMlPredictions } from '../hooks/useMlPredictions';
 import {
   loadFlags,
   removeFlag,
@@ -14,9 +16,19 @@ import { fmtDateTime } from '../utils/format';
 
 export const Alerts: React.FC = () => {
   const { events, riskByCode } = useTraceData();
+  const { byCode: mlByCode } = useMlPredictions();
   const [flags, setFlags] = useState<InvestigationFlag[]>(() => loadFlags());
 
   const eventByCode = (code: string) => events.find((e) => e.event_code === code);
+
+  // Unacknowledged first; among those, model-flagged candidate industrial
+  // fires float to the top so the sharpest leads get looked at first.
+  const mlRank = (code: string) =>
+    mlByCode.get(code)?.predicted_label === 'CANDIDATE_INDUSTRIAL_FIRE' ? 0 : 1;
+  const sortedFlags = [...flags].sort((a, b) => {
+    if (a.acknowledged !== b.acknowledged) return a.acknowledged ? 1 : -1;
+    return mlRank(a.code) - mlRank(b.code);
+  });
 
   const acknowledge = (code: string, v: boolean) =>
     setFlags(setFlagAcknowledged(code, v));
@@ -53,15 +65,17 @@ export const Alerts: React.FC = () => {
         />
       ) : (
         <ul className="divide-y divide-hairline rounded-md border border-hairline bg-surface">
-          {flags.map((f) => {
+          {sortedFlags.map((f) => {
             const e = eventByCode(f.code);
             const risk = riskByCode.get(f.code);
+            const ml = mlByCode.get(f.code);
             return (
               <li
                 key={f.code}
                 className={`flex flex-wrap items-center gap-3 px-4 py-3 ${f.acknowledged ? 'opacity-60' : ''}`}
               >
                 {risk && <RiskBadge assessment={risk} />}
+                {ml && <ModelBadge prediction={ml} />}
                 <div className="min-w-0">
                   <Link
                     to={`/events/${encodeURIComponent(f.code)}`}

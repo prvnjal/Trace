@@ -1,0 +1,31 @@
+================================================================
+TRACE ML PoC scorecard  (model ml-poc-1, xgboost)
+================================================================
+Eval set : 107 human-labeled events from the labeling workbook
+           (43 NEEDS_REVIEW excluded from scoring)
+Train set: 141 weak-labeled current events (heuristics, not ground truth)
+
+Accuracy          : 0.692   (baseline always-LIKELY_AG_BURNING: 0.196)
+Macro F1          : 0.458
+Weighted F1       : 0.642
+
+class                          prec    rec     f1    n
+----------------------------------------------------------------
+ROUTINE_FLARE                 0.000  0.000  0.000    5
+PERSISTENT_THERMAL_SOURCE     0.663  0.982  0.791   56
+CANDIDATE_INDUSTRIAL_FIRE     0.500  0.167  0.250   12
+LIKELY_WILDFIRE               0.857  0.462  0.600   13
+LIKELY_AG_BURNING             0.846  0.524  0.647   21
+
+Confusion matrix (rows = human label, cols = predicted):
+                 ROUTINE_FL PERSISTENT CANDIDATE_ LIKELY_WIL LIKELY_AG_
+ROUTINE_FLARE             0          5          0          0          0
+PERSISTENT_THER           0         55          1          0          0
+CANDIDATE_INDUS           0         10          2          0          0
+LIKELY_WILDFIRE           0          5          0          6          2
+LIKELY_AG_BURNI           0          8          1          1         11
+
+Weak-label vs human agreement (on 24 events carrying both): 0.708
+  (heuristic quality diagnostic — not a model score)
+
+Caveats: weak labels are noisy by design; ROUTINE_FLARE has only 5 eval examples so its recall estimate is noisy; event codes churn across refreshes, so this score is a point-in-time evaluation on the frozen workbook, not on the live event table.

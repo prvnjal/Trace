@@ -8,6 +8,8 @@ import type { RiskAssessment } from '../utils/risk';
 import { fetchFacilityClusters, type FacilityClusterItem } from '../services/api';
 import { displayFacilityName } from '../utils/format';
 import { RiskBadge } from './RiskBadge';
+import { useMlPredictions } from '../hooks/useMlPredictions';
+import { mlClassLabel } from '../utils/ml';
 
 
 const INDIA_CENTER: [number, number] = [23.5, 80.0];
@@ -250,6 +252,8 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
   const [legendOn, setLegendOn] = useState(showLegend);
   const [zoom, setZoom] = useState(5);
 
+  const { byCode: mlByCode } = useMlPredictions();
+
   const isDarkBasemap = dark || satellite;
 
   useEffect(() => {
@@ -455,6 +459,23 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
                           </dd>
                         </div>
                       )}
+                      {(() => {
+                        const p = mlByCode.get(event.event_code);
+                        return p ? (
+                          <div className="flex justify-between gap-3">
+                            <dt className="opacity-70">Model</dt>
+                            <dd className="font-semibold text-right">
+                              {mlClassLabel(p.predicted_label)}
+                              {p.confidence != null && (
+                                <span className="font-normal opacity-70">
+                                  {' '}
+                                  · {Math.round(p.confidence * 100)}%
+                                </span>
+                              )}
+                            </dd>
+                          </div>
+                        ) : null;
+                      })()}
                     </dl>
                     <Link
                       to={`/events/${encodeURIComponent(event.event_code)}`}

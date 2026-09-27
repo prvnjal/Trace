@@ -18,7 +18,8 @@ from contextlib import asynccontextmanager
 from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, text
+from sqlalchemy.exc import OperationalError, ProgrammingError
 from sqlalchemy.orm import Session
 
 from app.db import engine, get_db
@@ -390,6 +391,50 @@ def event_detections(
             for r in rows
         ],
     }
+
+
+def _ml_prediction_row(row) -> dict:
+    """Shape one ml_predictions row for the API (compact: top confidence only)."""
+    proba = row.proba_json or {}
+    label = row.predicted_label
+    conf = proba.get(label) if isinstance(proba, dict) else None
+    return {
+        "event_code": row.event_code,
+        "predicted_label": label,
+        "confidence": conf,
+        "model_version": row.model_version,
+        "predicted_at": row.predicted_at.isoformat() if row.predicted_at else None,
+    }
+
+
+def _ml_predictions_or_empty(db: Session) -> list:
+    """All scored predictions; empty when the table was never populated.
+
+    The ml_predictions table is created by ml_poc/predict.py --to-db, not by
+    the API's own migrations, so a fresh database simply has no predictions.
+    """
+    try:
+        rows = db.execute(
+            text(
+                "SELECT event_code, predicted_label, proba_json, model_version, predicted_at"
+                " FROM ml_predictions"
+            )
+        ).mappings().all()
+    except (ProgrammingError, OperationalError):
+        db.rollback()
+        return []
+    return [_ml_prediction_row(r) for r in rows]
+
+
+@app.get("/ml-predictions")
+def ml_predictions(db: Session = Depends(get_db)) -> dict:
+    """Every scored model prediction, compact (no per-class probability vectors).
+
+    Powers the events-list badges, the analytics distribution, map popups and
+    alert ranking. ~1.2k rows — small enough to fetch once and cache client-side.
+    """
+    preds = _ml_predictions_or_empty(db)
+    return {"count": len(preds), "predictions": preds}
 
 
 @app.get("/changes/since-last-refresh")

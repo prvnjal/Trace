@@ -1,0 +1,99 @@
+{
+  "model_version": "ml-poc-1",
+  "flavor": "xgboost",
+  "n_eval": 107,
+  "n_needreview_excluded": 43,
+  "n_invalid_label_rows": 0,
+  "accuracy": 0.6916,
+  "macro_f1": 0.4577,
+  "weighted_f1": 0.6421,
+  "baseline_majority_label": "LIKELY_AG_BURNING",
+  "baseline_accuracy": 0.1963,
+  "per_class": {
+    "ROUTINE_FLARE": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 5.0
+    },
+    "PERSISTENT_THERMAL_SOURCE": {
+      "precision": 0.6627,
+      "recall": 0.9821,
+      "f1-score": 0.7914,
+      "support": 56.0
+    },
+    "CANDIDATE_INDUSTRIAL_FIRE": {
+      "precision": 0.5,
+      "recall": 0.1667,
+      "f1-score": 0.25,
+      "support": 12.0
+    },
+    "LIKELY_WILDFIRE": {
+      "precision": 0.8571,
+      "recall": 0.4615,
+      "f1-score": 0.6,
+      "support": 13.0
+    },
+    "LIKELY_AG_BURNING": {
+      "precision": 0.8462,
+      "recall": 0.5238,
+      "f1-score": 0.6471,
+      "support": 21.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      5,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      55,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      10,
+      2,
+      0,
+      0
+    ],
+    [
+      0,
+      5,
+      0,
+      6,
+      2
+    ],
+    [
+      0,
+      8,
+      1,
+      1,
+      11
+    ]
+  ],
+  "confusion_matrix_labels": [
+    "ROUTINE_FLARE",
+    "PERSISTENT_THERMAL_SOURCE",
+    "CANDIDATE_INDUSTRIAL_FIRE",
+    "LIKELY_WILDFIRE",
+    "LIKELY_AG_BURNING"
+  ],
+  "weak_vs_human_agreement": {
+    "n_compared": 24,
+    "agreement": 0.7083
+  },
+  "eval_label_dist": {
+    "ROUTINE_FLARE": 5,
+    "PERSISTENT_THERMAL_SOURCE": 56,
+    "CANDIDATE_INDUSTRIAL_FIRE": 12,
+    "LIKELY_WILDFIRE": 13,
+    "LIKELY_AG_BURNING": 21
+  }
+}

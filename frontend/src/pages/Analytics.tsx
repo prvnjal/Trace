@@ -10,6 +10,8 @@ import {
   YAxis,
 } from 'recharts';
 import { useTraceData } from '../data/TraceDataContext';
+import { useMlPredictions } from '../hooks/useMlPredictions';
+import { ML_CLASS_ORDER, ML_CLASS_SHORT } from '../utils/ml';
 import { PageHeader, Section, EmptyState, ErrorState, Skeleton } from '../components/ui';
 import { RISK_META, RISK_TIERS } from '../utils/risk';
 import { fmtDate, fmtInt, satLabel } from '../utils/format';
@@ -54,6 +56,7 @@ const HIST_BINS = [
 
 export const Analytics: React.FC = () => {
   const { events, tierCounts, loading, error, reload } = useTraceData();
+  const { byCode: mlByCode, loading: mlLoading } = useMlPredictions();
 
   const daily = useMemo(() => {
     const m = new Map<string, number>();
@@ -105,6 +108,25 @@ export const Analytics: React.FC = () => {
       count: events.filter((e) => e.satellites.includes(s)).length,
     }));
   }, [events]);
+
+  const modelData = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of mlByCode.values()) {
+      counts.set(p.predicted_label, (counts.get(p.predicted_label) ?? 0) + 1);
+    }
+    const fills: Record<string, string> = {
+      CANDIDATE_INDUSTRIAL_FIRE: '#B3372A',
+      ROUTINE_FLARE: '#C2521E',
+      PERSISTENT_THERMAL_SOURCE: '#9A7B2D',
+      LIKELY_WILDFIRE: '#3F6B5E',
+      LIKELY_AG_BURNING: '#6E675C',
+    };
+    return ML_CLASS_ORDER.map((c) => ({
+      cls: ML_CLASS_SHORT[c] ?? c,
+      count: counts.get(c) ?? 0,
+      fill: fills[c] ?? '#6E675C',
+    }));
+  }, [mlByCode]);
 
   if (loading && events.length === 0) {
     return (
@@ -213,6 +235,35 @@ export const Analytics: React.FC = () => {
               <Bar dataKey="count" fill="#1D4A38" radius={[4, 4, 0, 0]} maxBarSize={64} />
             </BarChart>
           </ResponsiveContainer>
+        </ChartCard>
+
+        <ChartCard
+          question="What does the model see?"
+          note="Model assessments across scored events — analyst categories from the thermal model, not confirmed causes."
+        >
+          {mlByCode.size === 0 ? (
+            <div className="flex h-full items-center justify-center px-6 text-center">
+              <p className="text-sm text-muted">
+                {mlLoading
+                  ? 'Loading model assessments…'
+                  : 'No model predictions loaded yet — run ml_poc/predict.py --to-db.'}
+              </p>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={modelData} margin={{ top: 4, right: 4, bottom: 0, left: -12 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E9E2D5" vertical={false} />
+                <XAxis dataKey="cls" tick={AXIS_TICK} interval={0} />
+                <YAxis tick={AXIS_TICK} allowDecimals={false} />
+                <Tooltip content={<ChartTip />} cursor={{ fill: '#F3EFE6' }} />
+                <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={64}>
+                  {modelData.map((d) => (
+                    <Cell key={d.cls} fill={d.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </ChartCard>
 
         <div className="rounded-md border border-hairline bg-surface p-5">
