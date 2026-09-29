@@ -2,7 +2,6 @@ import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { TraceDataProvider } from './data/TraceDataContext';
 import { AppShell } from './components/AppShell';
-import { TraceMark } from './components/TraceMark';
 import Overview from './pages/Overview';
 import LiveMap from './pages/LiveMap';
 import Events from './pages/Events';
@@ -17,7 +16,9 @@ const Splash = lazy(() => import('./pages/Splash'));
 
 const SplashFallback: React.FC = () => (
   <div className="min-h-screen bg-paper flex items-center justify-center">
-    <TraceMark size={64} />
+    <span className="font-display font-semibold text-[28px] tracking-tight text-ink">
+      TRACE
+    </span>
   </div>
 );
 

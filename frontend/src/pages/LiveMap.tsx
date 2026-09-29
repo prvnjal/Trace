@@ -3,7 +3,9 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, SlidersHorizontal, X } from 'lucide-react';
 import { useTraceData } from '../data/TraceDataContext';
 import { ThermalMapView } from '../components/ThermalMapView';
-import { RiskBadge, RiskReasons } from '../components/RiskBadge';
+import { RiskReasons } from '../components/RiskBadge';
+import { useMlPredictions } from '../hooks/useMlPredictions';
+import { mlClassLabel } from '../utils/ml';
 import { ConfidenceFilter } from '../components/ConfidenceFilter';
 import { HonestyNote } from '../components/Term';
 import { EmptyState, ErrorState } from '../components/ui';
@@ -197,6 +199,7 @@ const FilterDrawer: React.FC<{
 
 export const LiveMap: React.FC = () => {
   const { events, riskByCode, confidenceFilter, setConfidenceFilter, loading, error, reload } = useTraceData();
+  const { byCode: mlByCode } = useMlPredictions();
   const [searchParams] = useSearchParams();
   const focusCode = searchParams.get('event');
 
@@ -317,8 +320,26 @@ export const LiveMap: React.FC = () => {
             </button>
           </div>
           <div className="px-4 py-3 space-y-3">
-            <RiskBadge assessment={selectedRisk} size="md" />
+            {(() => {
+              const p = mlByCode.get(selected.event_code);
+              return p ? (
+                <p className="text-[15px] font-semibold text-[#E8E4D8]">
+                  {mlClassLabel(p.predicted_label)}
+                  {p.confidence != null && (
+                    <span className="ml-1.5 font-normal text-[#9AA39C] tabular-nums">
+                      · {Math.round(p.confidence * 100)}%
+                    </span>
+                  )}
+                </p>
+              ) : null;
+            })()}
             <dl className="text-[13px] space-y-1.5">
+              <div className="flex justify-between gap-3">
+                <dt className="text-[#9AA39C]">Attention</dt>
+                <dd className="tabular-nums font-semibold">
+                  {selectedRisk.tier.charAt(0) + selectedRisk.tier.slice(1).toLowerCase()}
+                </dd>
+              </div>
               <div className="flex justify-between gap-3">
                 <dt className="text-[#9AA39C]">Detected</dt>
                 <dd className="tabular-nums">{fmtDateTime(selected.last_detected)}</dd>

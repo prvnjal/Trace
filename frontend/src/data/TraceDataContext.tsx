@@ -17,6 +17,7 @@ import {
 } from '../services/api';
 import type { DataStatus, RefreshJobStatus } from '../services/api';
 import type {
+  EventFilters,
   EventSummary,
   FacilitySummary,
   SystemStatistics,
@@ -30,7 +31,7 @@ interface TraceData {
   stats: SystemStatistics | null;
   /** Exact "updated from FIRMS" timestamp + last refresh summary. */
   dataStatus: DataStatus | null;
-  /** All thermal events — one request, limit 1000. */
+  /** All thermal events — paged past the API's 1000-per-request cap. */
   events: EventSummary[];
   /** All industrial facilities (14,963) — paged once, then client-side. */
   facilities: FacilitySummary[];
@@ -57,6 +58,20 @@ export const useTraceData = (): TraceData => {
 
 const BASE_FILTERS = { min_detections: 1, satellite: '', near_facility: false, sort: 'detections' as const };
 
+const EVENT_PAGE = 1000;
+
+/** Fetch every event across pages — the API caps a single request at 1000. */
+const fetchEveryEvent = async (filters: EventFilters): Promise<EventSummary[]> => {
+  const all: EventSummary[] = [];
+  for (let offset = 0; ; offset += EVENT_PAGE) {
+    const res = await fetchEvents(filters, EVENT_PAGE, offset);
+    const batch = res.events || [];
+    all.push(...batch);
+    if (batch.length < EVENT_PAGE) break;
+  }
+  return all;
+};
+
 export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -76,17 +91,17 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(true);
     setError(null);
     try {
-      const [ok, s, ds, evRes, facs] = await Promise.all([
+      const [ok, s, ds, allEvents, facs] = await Promise.all([
         fetchHealth(),
         fetchStatistics(),
         fetchDataStatus(),
-        fetchEvents({ ...BASE_FILTERS, confidence: confFilter }, 1000, 0),
+        fetchEveryEvent({ ...BASE_FILTERS, confidence: confFilter }),
         fetchAllFacilities(),
       ]);
       setHealthy(ok);
       setStats(s);
       setDataStatus(ds);
-      setEvents(evRes.events || []);
+      setEvents(allEvents);
       setFacilities(facs);
       // Refresh job state is best-effort: older backends may not expose it.
       try {
@@ -109,8 +124,7 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
   const setConfidenceFilter = useCallback(async (nextConf: string[]) => {
     setConfidenceFilterState(nextConf);
     try {
-      const evRes = await fetchEvents({ ...BASE_FILTERS, confidence: nextConf }, 1000, 0);
-      setEvents(evRes.events || []);
+      setEvents(await fetchEveryEvent({ ...BASE_FILTERS, confidence: nextConf }));
     } catch (e) {
       console.error('Failed to update events with confidence filter:', e);
     }
@@ -129,7 +143,10 @@ export const TraceDataProvider: React.FC<{ children: React.ReactNode }> = ({
         const status = (e as { response?: { status?: number } })?.response?.status;
         if (status !== 409) throw e;
       }
-      for (let i = 0; i < 60; i++) {
+      // Poll up to ~30 minutes: a full refresh (satellite fetch + OSM
+      // land-cover tagging of new events) legitimately takes a while. The
+      // RefreshBanner keeps showing live progress even after this gives up.
+      for (let i = 0; i < 180; i++) {
         await new Promise((r) => setTimeout(r, 10000));
         const st = await fetchRefreshStatus();
         if (st.state === 'done') break;

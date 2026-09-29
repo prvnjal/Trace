@@ -15,7 +15,6 @@ import {
   Map as MapIcon,
   RefreshCw,
 } from 'lucide-react';
-import { TraceMark } from './TraceMark';
 import { RefreshBanner } from './RefreshBanner';
 import { useTraceData } from '../data/TraceDataContext';
 import { fmtDate } from '../utils/format';
@@ -57,7 +56,7 @@ const NAV = [
   { to: '/events', label: 'Events', icon: Activity },
   { to: '/facilities', label: 'Facilities', icon: Factory },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { to: '/alerts', label: 'Alerts', icon: Flag },
+  { to: '/alerts', label: 'Flags', icon: Flag },
 ];
 
 const SECONDARY_NAV = [{ to: '/about', label: 'Data Sources', icon: Database }];
@@ -97,18 +96,15 @@ const StatusPill: React.FC = () => {
 };
 
 const BrandLockup: React.FC<{ compact?: boolean }> = ({ compact }) => (
-  <div className="flex items-center gap-2.5 min-w-0">
-    <TraceMark size={compact ? 26 : 30} />
-    <div className="min-w-0 leading-none">
-      <p className="font-display font-semibold text-[17px] tracking-tight text-ink">
-        TRACE
+  <div className="min-w-0 leading-none">
+    <p className="font-display font-semibold text-[17px] tracking-tight text-ink">
+      TRACE
+    </p>
+    {!compact && (
+      <p className="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-faint">
+        Thermal intelligence · India
       </p>
-      {!compact && (
-        <p className="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-faint">
-          Thermal intelligence · India
-        </p>
-      )}
-    </div>
+    )}
   </div>
 );
 

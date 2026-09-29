@@ -1,6 +1,6 @@
 import React from 'react';
 import type { MlPrediction } from '../services/api';
-import { mlClassLabel, mlEvalNote } from '../utils/ml';
+import { mlClassLabel } from '../utils/ml';
 
 /**
  * Dossier hero card: the model's assessment of one event.
@@ -18,7 +18,6 @@ export const ModelAssessment: React.FC<{ prediction: MlPrediction | null }> = ({
   }
   const pct =
     prediction.confidence != null ? Math.round(prediction.confidence * 100) : null;
-  const evalNote = mlEvalNote(prediction.model_version);
   return (
     <div className="rounded-md border border-hairline bg-surface px-5 py-5 shadow-restrained">
       <p className="micro-label">Model assessment</p>
@@ -44,7 +43,6 @@ export const ModelAssessment: React.FC<{ prediction: MlPrediction | null }> = ({
       )}
       <p className="mt-4 border-t border-hairline pt-3 text-xs leading-relaxed text-muted">
         An analyst category from the thermal model — not a confirmed cause.
-        {evalNote ? ` ${evalNote}.` : ''}
       </p>
     </div>
   );

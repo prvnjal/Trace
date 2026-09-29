@@ -254,7 +254,7 @@ export const Events: React.FC = () => {
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="border-b border-hairline bg-wash/50">
-                {['Event', 'Attention', 'Model', 'Location', 'Detected', 'Detections', 'Max FRP', 'Nearest industry'].map(
+                {['Event', 'Model', 'Attention', 'Location', 'Detected', 'Detections', 'Max FRP', 'Nearest industry'].map(
                   (h) => (
                     <th
                       key={h}
@@ -282,9 +282,6 @@ export const Events: React.FC = () => {
                       </Link>
                     </td>
                     <td className="px-3 py-2.5">
-                      {risk && <RiskBadge assessment={risk} />}
-                    </td>
-                    <td className="px-3 py-2.5">
                       {(() => {
                         const p = mlByCode.get(e.event_code);
                         return p ? (
@@ -293,6 +290,9 @@ export const Events: React.FC = () => {
                           <span className="text-faint">—</span>
                         );
                       })()}
+                    </td>
+                    <td className="px-3 py-2.5">
+                      {risk && <RiskBadge assessment={risk} />}
                     </td>
                     <td className="px-3 py-2.5 font-mono text-xs text-muted tabular-nums whitespace-nowrap">
                       {e.latitude.toFixed(3)}, {e.longitude.toFixed(3)}

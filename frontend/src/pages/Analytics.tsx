@@ -84,8 +84,7 @@ export const Analytics: React.FC = () => {
     [events]
   );
 
-  const proximityData = useMemo(() => {
-    const buckets = [
+  const proximityData = useMemo(() => {    const buckets = [
       { label: '≤ 1 km', count: 0 },
       { label: '1–5 km', count: 0 },
       { label: '> 5 km', count: 0 },
@@ -99,6 +98,15 @@ export const Analytics: React.FC = () => {
       else buckets[2].count += 1;
     }
     return buckets;
+  }, [events]);
+
+  const rangeLabel = useMemo(() => {
+    const days = events
+      .map((e) => e.first_detected?.slice(0, 10))
+      .filter((d): d is string => !!d)
+      .sort();
+    if (days.length === 0) return 'the current window';
+    return `${fmtDate(`${days[0]}T00:00:00`)} – ${fmtDate(`${days[days.length - 1]}T00:00:00`)}`;
   }, [events]);
 
   const satelliteData = useMemo(() => {
@@ -154,7 +162,9 @@ export const Analytics: React.FC = () => {
         description="Thermal activity across regions, facilities, and time."
       />
       <p className="text-xs text-faint tabular-nums mb-6">
-        Computed from {fmtInt(events.length)} real events — no modeled values.
+        Computed from {fmtInt(events.length)} real events. The “What does the
+        model see?” chart counts model assessments — analyst categories, not
+        confirmed causes.
       </p>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -272,7 +282,7 @@ export const Analytics: React.FC = () => {
           </h3>
           <ul className="mt-3 space-y-2 text-[13px] leading-relaxed text-muted list-disc pl-5">
             <li>Every bar is counted from the live API — nothing is modeled or smoothed.</li>
-            <li>The window is five days (20–24 Sept 2026); trends need a longer series.</li>
+            <li>The window is {rangeLabel}; trends need a longer series.</li>
             <li>Proximity to industry is context for analysts, not evidence of causation.</li>
             <li>Attention tiers are a fixed rule, documented under Data Sources.</li>
           </ul>

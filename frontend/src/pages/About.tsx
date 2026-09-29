@@ -4,16 +4,19 @@ import { Term, GLOSSARY, HonestyNote } from '../components/Term';
 import { useTraceData } from '../data/TraceDataContext';
 import { fmtDate, fmtInt } from '../utils/format';
 
-const PIPELINE = [
+const PIPELINE = (stats: {
+  total_detections?: number | null;
+  total_events?: number | null;
+} | null) => [
   {
     n: '01',
     title: 'Ingest',
-    body: 'NASA FIRMS thermal anomaly CSVs (VIIRS SNPP, VIIRS NOAA-20, MODIS) for the India region are downloaded and normalized — 1,868 unique detections in this snapshot.',
+    body: `NASA FIRMS thermal anomaly CSVs (VIIRS SNPP, VIIRS NOAA-20, MODIS) for the India region are downloaded and normalized — ${fmtInt(stats?.total_detections ?? 0)} unique detections in this snapshot.`,
   },
   {
     n: '02',
     title: 'Cluster',
-    body: 'Detections are grouped into events with haversine DBSCAN (5 km radius, min_samples=1); clusters split when consecutive detections are more than 24 hours apart — 708 events.',
+    body: `Detections are grouped into events with haversine DBSCAN (5 km radius, min_samples=1); clusters split when consecutive detections are more than 24 hours apart — ${fmtInt(stats?.total_events ?? 0)} events.`,
   },
   {
     n: '03',
@@ -22,6 +25,11 @@ const PIPELINE = [
   },
   {
     n: '04',
+    title: 'Assess',
+    body: 'A thermal model assigns each event an analyst category — candidate industrial fire, routine flare, persistent thermal source, likely wildfire, or likely agricultural burning — with a confidence score. The model assesses; the analyst decides.',
+  },
+  {
+    n: '05',
     title: 'Serve',
     body: 'Events and facilities live in PostGIS and are served by a FastAPI backend. This dashboard reads them live — every number on screen comes from that API.',
   },
@@ -29,8 +37,9 @@ const PIPELINE = [
 
 export const About: React.FC = () => {
   const { stats } = useTraceData();
-  const from = stats?.date_range.from ? fmtDate(stats.date_range.from) : '20 Sept 2026';
-  const to = stats?.date_range.to ? fmtDate(stats.date_range.to) : '24 Sept 2026';
+  const from = stats?.date_range.from ? fmtDate(stats.date_range.from) : null;
+  const to = stats?.date_range.to ? fmtDate(stats.date_range.to) : null;
+  const pipeline = PIPELINE(stats);
 
   return (
     <div className="max-w-3xl">
@@ -74,7 +83,7 @@ export const About: React.FC = () => {
 
         <Section title="Pipeline">
           <ol className="space-y-5">
-            {PIPELINE.map((s) => (
+            {pipeline.map((s) => (
               <li key={s.n} className="flex gap-4">
                 <span className="font-mono text-xs text-faint pt-1 shrink-0">{s.n}</span>
                 <div>
@@ -89,8 +98,11 @@ export const About: React.FC = () => {
         <Section title="Dataset honesty">
           <ul className="space-y-2.5 text-sm leading-relaxed text-muted list-disc pl-5">
             <li>
-              This is a <span className="font-semibold text-ink">5-day snapshot ({from} – {to})</span>,
-              not a live feed. Refresh cadence is a deployment choice, not a product claim.
+              This is a{' '}
+              <span className="font-semibold text-ink">
+                5-day snapshot{from && to ? ` (${from} – ${to})` : ''}
+              </span>
+              , not a live feed. Refresh cadence is a deployment choice, not a product claim.
             </li>
             <li>
               FIRMS latency is measured in hours; a heat source can start and end between overpasses.
@@ -107,30 +119,44 @@ export const About: React.FC = () => {
           </div>
         </Section>
 
-        <Section title="The attention-tier rule">
-          <p className="text-sm leading-relaxed text-muted mb-3">
-            Attention tiers are a fixed, explainable heuristic computed from two
-            real fields — detection count and distance to the nearest mapped
-            facility. There is no model, no training data, and no confidence
-            score. The exact rule:
+        <Section title="How TRACE assesses events">
+          <p className="text-sm leading-relaxed text-muted mb-4">
+            Every event carries <span className="font-semibold text-ink">one assessment</span> —
+            the thermal model's analyst category, with a confidence score. It is a hypothesis
+            to investigate, not a verified cause: in its latest evaluation the model scored{' '}
+            <span className="font-semibold text-ink">69% accuracy against 107 events labeled by hand</span>.
+            The model assesses. The analyst decides.
           </p>
-          <pre className="rounded-md border border-hairline bg-ink text-paper font-mono text-xs leading-relaxed p-4 overflow-x-auto">
-{`CRITICAL:  detections >= 25 AND nearest facility <= 5 km
-HIGH:      detections >= 10
-           OR (detections >= 3 AND nearest facility <= 1 km)
-MEDIUM:    detections >= 3 OR nearest facility <= 5 km
-LOW:       everything else`}
-          </pre>
+          <p className="text-sm leading-relaxed text-muted mb-4">
+            Alongside it, a fixed <span className="font-semibold text-ink">attention tier</span> tells
+            the analyst where to look first. It is triage, not a verdict — a transparent rule over
+            two real fields (detection count, distance to the nearest mapped facility):
+          </p>
+          <dl className="rounded-md border border-hairline bg-surface divide-y divide-hairline overflow-hidden">
+            {[
+              ['Critical', '25+ detections within 5 km of a mapped facility'],
+              ['High', '10+ detections, or 3+ detections within 1 km of a facility'],
+              ['Medium', '3+ detections, or any event within 5 km of a facility'],
+              ['Low', 'everything else'],
+            ].map(([tier, rule]) => (
+              <div key={tier} className="flex items-baseline gap-4 px-4 py-2.5">
+                <dt className="w-20 shrink-0 text-xs font-bold uppercase tracking-[0.06em] text-ink">
+                  {tier}
+                </dt>
+                <dd className="text-[13px] text-muted">{rule}</dd>
+              </div>
+            ))}
+          </dl>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            Every badge in the product carries its plain-language reasons
-            (detection count, span, distance). The tier tells you where to look
-            first — never what caused the heat.
+            Detection-level <span className="font-semibold text-ink">confidence</span> (high /
+            nominal / low) comes straight from the FIRMS feed and describes each satellite
+            observation — it is a filter for detections, not a competing verdict on the event.
           </p>
         </Section>
 
         <Section title="What TRACE does not do">
           <ul className="space-y-2.5 text-sm leading-relaxed text-muted list-disc pl-5">
-            <li>It does not classify fires (industrial, wildfire, agricultural, flare).</li>
+            <li>It does not confirm causes — model categories are hypotheses that need field verification.</li>
             <li>It does not send alerts or notifications — flags are browser-only notes.</li>
             <li>It does not attribute a thermal event to a nearby facility.</li>
             <li>It does not see inside facility walls — only the thermal picture around them.</li>

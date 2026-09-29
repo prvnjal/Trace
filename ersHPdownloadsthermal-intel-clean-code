@@ -1,23 +1,36 @@
 warning: in the working copy of 'backend/app/main.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/app/models.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/app/services/refresh.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/database/schema.sql', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/osm_landuse_extract.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'backend/targeted_osm_extract.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'docker-compose.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/App.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/AppShell.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/ModelAssessment.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/RefreshBanner.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/Term.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/components/ThermalMapView.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/data/TraceDataContext.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/About.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/Analytics.tsx', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'frontend/src/pages/EventDetail.tsx', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'frontend/src/pages/Events.tsx', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'frontend/src/types/index.ts', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'frontend/src/utils/format.ts', LF will be replaced by CRLF the next time Git touches it
- backend/app/main.py                |  18 [32m++++[m[31m-[m
- backend/app/models.py              |  11 [32m++++[m
- backend/app/services/refresh.py    |  80 [32m+++++++++++++++++++++[m[31m-[m
- backend/database/schema.sql        |   5 [32m++[m
- backend/osm_landuse_extract.py     |   6 [32m+[m[31m-[m
- backend/targeted_osm_extract.py    |  21 [32m+++++[m[31m-[m
- docker-compose.yml                 |   4 [32m++[m
- frontend/src/pages/EventDetail.tsx | 132 [32m+++++++++++++++++++++++++++++++++++[m[31m--[m
- frontend/src/pages/Events.tsx      |   5 [32m+[m[31m-[m
- frontend/src/types/index.ts        |   6 [32m++[m
- frontend/src/utils/format.ts       |  19 [32m+++++[m[31m-[m
- 11 files changed, 291 insertions(+), 16 deletions(-)
+warning: in the working copy of 'frontend/src/pages/LiveMap.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/pages/Splash.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/src/services/api.ts', LF will be replaced by CRLF the next time Git touches it
+ backend/app/main.py                         |  103 [32m++[m[31m-[m
+ frontend/index.html                         |    2 [32m+[m[31m-[m
+ frontend/public/trace-mark.svg              |    6 [31m-[m
+ frontend/src/App.tsx                        |    5 [32m+[m[31m-[m
+ frontend/src/components/AppShell.tsx        |   22 [32m+[m[31m-[m
+ frontend/src/components/ModelAssessment.tsx |    4 [32m+[m[31m-[m
+ frontend/src/components/RefreshBanner.tsx   |   85 [32m++[m[31m-[m
+ frontend/src/components/Term.tsx            |    2 [32m+[m[31m-[m
+ frontend/src/components/ThermalMapView.tsx  |   44 [32m+[m[31m-[m
+ frontend/src/components/TraceMark.tsx       |   50 [31m--[m
+ frontend/src/data/TraceDataContext.tsx      |   31 [32m+[m[31m-[m
+ frontend/src/pages/About.tsx                |   76 [32m+[m[31m-[m
+ frontend/src/pages/Analytics.tsx            |   18 [32m+[m[31m-[m
+ frontend/src/pages/EventDetail.tsx          |   13 [32m+[m[31m-[m
+ frontend/src/pages/Events.tsx               |    8 [32m+[m[31m-[m
+ frontend/src/pages/LiveMap.tsx              |   25 [32m+[m[31m-[m
+ frontend/src/pages/Splash.tsx               |    9 [32m+[m[31m-[m
+ frontend/src/services/api.ts                |   10 [32m+[m
+ ml_poc/outputs/ml_predictions.csv           | 1094 [32m+++++++++++++++[m[31m------------[m
+ 19 files changed, 962 insertions(+), 645 deletions(-)

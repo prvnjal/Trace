@@ -155,6 +155,10 @@ export interface RefreshJobStatus {
   state: 'idle' | 'running' | 'done' | 'failed';
   detail: string | null;
   summary: Record<string, unknown> | null;
+  /** ISO start time of the current/last run; null when never run. */
+  started_at?: string | null;
+  /** True when a "running" job exceeded the server's stuck threshold. */
+  stale?: boolean;
 }
 
 /** Exact "updated from FIRMS" timestamp for honest current-ish labeling. */
@@ -174,6 +178,12 @@ export const triggerRefresh = async (
 
 export const fetchRefreshStatus = async (): Promise<RefreshJobStatus> => {
   const res = await api.get('/admin/refresh/status');
+  return res.data;
+};
+
+/** Force-clear a wedged refresh state (a "running" job that will never finish). */
+export const resetRefresh = async (): Promise<{ status: string }> => {
+  const res = await api.post('/admin/refresh/reset');
   return res.data;
 };
 

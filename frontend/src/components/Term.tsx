@@ -63,7 +63,7 @@ export const HonestyNote: React.FC<{ compact?: boolean }> = ({ compact }) => {
   return (
     <blockquote className="border-l-2 border-pine pl-4 py-1 text-sm leading-relaxed text-muted max-w-prose">
       {PROXIMITY_NOTE} A thermal event near a factory may be unrelated to it
-      entirely \u2014 field verification is the only way to establish a cause.
+      entirely — field verification is the only way to establish a cause.
     </blockquote>
   );
 };

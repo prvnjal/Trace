@@ -7,7 +7,6 @@ import type { EventSummary } from '../types';
 import type { RiskAssessment } from '../utils/risk';
 import { fetchFacilityClusters, type FacilityClusterItem } from '../services/api';
 import { displayFacilityName } from '../utils/format';
-import { RiskBadge } from './RiskBadge';
 import { useMlPredictions } from '../hooks/useMlPredictions';
 import { mlClassLabel } from '../utils/ml';
 
@@ -439,11 +438,19 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
                     <div className="font-mono font-semibold tabular-nums border-b border-hairline pb-1.5 mb-1.5">
                       {event.event_code}
                     </div>
-                    {risk && (
-                      <div className="mb-1.5">
-                        <RiskBadge assessment={risk} />
-                      </div>
-                    )}
+                    {(() => {
+                      const p = mlByCode.get(event.event_code);
+                      return p ? (
+                        <div className="mb-1.5 text-[13px] font-semibold text-ink">
+                          {mlClassLabel(p.predicted_label)}
+                          {p.confidence != null && (
+                            <span className="ml-1 font-normal text-muted tabular-nums">
+                              · {Math.round(p.confidence * 100)}%
+                            </span>
+                          )}
+                        </div>
+                      ) : null;
+                    })()}
                     <dl className="space-y-1">
                       <div className="flex justify-between gap-3">
                         <dt className="opacity-70">Detections</dt>
@@ -459,23 +466,14 @@ export const ThermalMapView: React.FC<ThermalMapViewProps> = ({
                           </dd>
                         </div>
                       )}
-                      {(() => {
-                        const p = mlByCode.get(event.event_code);
-                        return p ? (
-                          <div className="flex justify-between gap-3">
-                            <dt className="opacity-70">Model</dt>
-                            <dd className="font-semibold text-right">
-                              {mlClassLabel(p.predicted_label)}
-                              {p.confidence != null && (
-                                <span className="font-normal opacity-70">
-                                  {' '}
-                                  · {Math.round(p.confidence * 100)}%
-                                </span>
-                              )}
-                            </dd>
-                          </div>
-                        ) : null;
-                      })()}
+                      {risk && (
+                        <div className="flex justify-between gap-3">
+                          <dt className="opacity-70">Attention</dt>
+                          <dd className="font-semibold tabular-nums">
+                            {risk.tier.charAt(0) + risk.tier.slice(1).toLowerCase()}
+                          </dd>
+                        </div>
+                      )}
                     </dl>
                     <Link
                       to={`/events/${encodeURIComponent(event.event_code)}`}

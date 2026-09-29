@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { TraceMark } from '../components/TraceMark';
 
 const TraceCanvas = lazy(() => import('../components/TraceCanvas'));
 
@@ -62,7 +61,9 @@ export const Splash: React.FC = () => {
         <Suspense
           fallback={
             <div className="absolute inset-0 flex items-center justify-center">
-              <TraceMark size={140} dark />
+              <span className="font-display font-semibold text-[64px] tracking-tight text-[#F2EEE3]/90">
+                TRACE
+              </span>
             </div>
           }
         >
@@ -70,7 +71,9 @@ export const Splash: React.FC = () => {
         </Suspense>
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
-          <TraceMark size={132} dark className="splash-in" />
+          <span className="splash-in font-display font-semibold text-[64px] tracking-tight text-[#F2EEE3]/90">
+            TRACE
+          </span>
         </div>
       )}
 

@@ -190,15 +190,18 @@ export const EventDetail: React.FC = () => {
         }
       />
 
-      <div className="mb-6">
-        <RiskBadge assessment={assessment} size="md" />
-      </div>
-
       {!mlLoading && mlByCode.size > 0 && (
-        <div className="mb-8">
+        <div className="mb-5">
           <ModelAssessment prediction={mlByCode.get(event.event_code) ?? null} />
         </div>
       )}
+
+      <div className="mb-8 flex items-center gap-2.5">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-faint">
+          Triage attention
+        </span>
+        <RiskBadge assessment={assessment} />
+      </div>
 
       <div className="space-y-8">
         <Section title="Thermal activity">

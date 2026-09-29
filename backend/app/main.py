@@ -4,11 +4,12 @@ DB-backed endpoints over the PostGIS store. Serves the dashboard:
 real FIRMS-derived thermal events for India plus OSM industrial context.
 
 Proximity to a facility is context, not a cause: the API reports
-distances and counts, never a classification.
+distances and counts; the thermal model reports analyst categories,
+never confirmed causes.
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 import logging
 import math
@@ -393,6 +394,8 @@ def event_detections(
     }
 
 
+
+
 def _ml_prediction_row(row) -> dict:
     """Shape one ml_predictions row for the API (compact: top confidence only)."""
     proba = row.proba_json or {}
@@ -718,7 +721,51 @@ def facility_clusters(
 # result as "updated from FIRMS" with the exact timestamp from /data-status —
 # never "live".
 
-_refresh_state: dict = {"state": "idle", "detail": None, "summary": None}
+# A refresh that stays "running" longer than this is treated as stuck: the
+# status endpoint reports it as failed (stale) and /admin/refresh/reset clears
+# it. Refreshes legitimately take a while (OSM land-cover tagging of many new
+# events can run 30-60+ minutes), so the bar is generous.
+STALE_RUNNING_SECONDS = 3 * 3600
+
+_refresh_state: dict = {
+    "state": "idle",
+    "detail": None,
+    "summary": None,
+    "started_at": None,  # ISO timestamp of the current/last run
+}
+
+
+def _refresh_status_view() -> dict:
+    """Status payload with stuck-job detection: a job "running" longer than
+    STALE_RUNNING_SECONDS is reported as failed/stale instead of letting the
+    UI spin forever. The underlying thread (if any) is harmless — a new
+    refresh simply replaces the state."""
+    state = _refresh_state["state"]
+    started_at = _refresh_state.get("started_at")
+    stale = False
+    if state == "running" and started_at:
+        try:
+            age = (
+                datetime.now(timezone.utc) - datetime.fromisoformat(started_at)
+            ).total_seconds()
+        except ValueError:
+            age = 0
+        if age > STALE_RUNNING_SECONDS:
+            stale = True
+            state = "failed"
+    detail = _refresh_state["detail"]
+    if stale:
+        detail = (
+            "The refresh looks stuck (running over 3 hours with no progress). "
+            "It was marked failed automatically — safe to reset and start a fresh one."
+        )
+    return {
+        "state": state,
+        "detail": detail,
+        "summary": _refresh_state["summary"],
+        "started_at": started_at,
+        "stale": stale,
+    }
 
 
 def _run_refresh(days: int | None) -> None:
@@ -745,13 +792,40 @@ def _run_refresh(days: int | None) -> None:
         db.close()
 
 
+def _mark_running(detail: str) -> None:
+    _refresh_state.update(
+        state="running",
+        detail=detail,
+        summary=None,
+        started_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def _is_running() -> bool:
+    """True if a refresh is genuinely in flight. A 'running' job older than
+    STALE_RUNNING_SECONDS counts as stuck, not running — so the scheduler and
+    manual triggers recover on their own instead of 409-ing forever."""
+    if _refresh_state["state"] != "running":
+        return False
+    started_at = _refresh_state.get("started_at")
+    if not started_at:
+        return True
+    try:
+        age = (
+            datetime.now(timezone.utc) - datetime.fromisoformat(started_at)
+        ).total_seconds()
+    except ValueError:
+        return True
+    return age <= STALE_RUNNING_SECONDS
+
+
 def _scheduled_refresh() -> None:
     """APScheduler entrypoint: skip if a refresh (manual or scheduled) is
     already running, otherwise run the full FIRMS refresh cycle."""
-    if _refresh_state["state"] == "running":
+    if _is_running():
         log.info("scheduled FIRMS refresh skipped: another refresh is running")
         return
-    _refresh_state.update(state="running", detail="scheduled refresh", summary=None)
+    _mark_running("scheduled refresh")
     _run_refresh(None)
 
 
@@ -760,16 +834,29 @@ def trigger_refresh(
     background_tasks: BackgroundTasks,
     days: int | None = Query(None, ge=1, le=5, description="FIRMS day range, 1-5 (default from env)"),
 ) -> dict:
-    if _refresh_state["state"] == "running":
+    if _is_running():
         raise HTTPException(status_code=409, detail="a refresh is already running")
-    _refresh_state.update(state="running", detail="starting", summary=None)
+    _mark_running("starting")
     background_tasks.add_task(_run_refresh, days)
     return {"status": "started", "days": days}
 
 
+@app.post("/admin/refresh/reset")
+def reset_refresh() -> dict:
+    """Force-clear the refresh state machine (unsticks a wedged 'running').
+
+    Safe: it only resets the status flags. If a refresh thread is genuinely
+    still working underneath, the next refresh simply replaces its state when
+    it finishes.
+    """
+    _refresh_state.update(state="idle", detail=None, summary=None, started_at=None)
+    log.warning("refresh state manually reset to idle")
+    return {"status": "reset"}
+
+
 @app.get("/admin/refresh/status")
 def refresh_status() -> dict:
-    return dict(_refresh_state)
+    return _refresh_status_view()
 
 
 @app.get("/data-status")
